@@ -13,16 +13,17 @@ class MemoryRiver {
  private:
   fstream file;
   string file_name;
-  int del_head = 0;
+  int del_head = 0, sizeofT = sizeof(T);
 
  public:
-  // MemoryRiver() = default;
+  MemoryRiver() = default;
 
-  MemoryRiver(const string &file_name) : file_name(file_name) {
+  explicit MemoryRiver(const string &file_name) : file_name(file_name) {
     file.open(file_name);
     if (!file) {
       file.open(file_name, std::ios::out);
       file.write(reinterpret_cast<char *>(&del_head), 4);
+      Write(T());
     } else {
       file.read(reinterpret_cast<char *>(&del_head), 4);
     }
@@ -42,24 +43,24 @@ class MemoryRiver {
       file.seekp(0, std::ios::end), pos = file.tellp();
     }
     file.write(reinterpret_cast<char *>(&del_nxt), 4);
-    file.write(reinterpret_cast<const char *>(&t), sizeof(T));
+    file.write(reinterpret_cast<const char *>(&t), sizeofT);
     file.close();
     return pos;
   }
 
   //用 t 的值更新位置索引 index 对应的对象
-  void Update(const T &t, const int &index) {
+  void Update(const T &t, const int &index = 4) {
     file.open(file_name);
     file.seekp(index + 4);
-    file.write(reinterpret_cast<const char *>(&t), sizeof(T));
+    file.write(reinterpret_cast<const char *>(&t), sizeofT);
     file.close();
   }
 
   //读出位置索引 index 对应的 T 对象的值并赋值给 t
-  void Read(T &t, const int &index) {
+  void Read(T &t, const int &index = 4) {
     file.open(file_name);
     file.seekg(index + 4);
-    file.read(reinterpret_cast<char *>(&t), sizeof(T));
+    file.read(reinterpret_cast<char *>(&t), sizeofT);
     file.close();
   }
 
