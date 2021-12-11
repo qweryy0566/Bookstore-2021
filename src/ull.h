@@ -10,18 +10,18 @@
 using std::string;
 using std::vector;
 const int kMaxLen = 66;
-const int kBlockLen = 317, kBlockCnt = kBlockLen;
+const int kBlockLen = 384, kBlockCnt = 272;
 
 class Node {
  private:
-  int offset, value;
+  int offset = -1, value;
   char key[kMaxLen] = "";
 
  public:
   Node();
   string Key() const;
   const int &Value() const;
-  Node(const string &, const int &);
+  Node(const string &, const int &, const int &offset_ = -1);
   bool operator<(const Node &) const;
   bool operator==(const Node &) const;
   bool operator!=(const Node &) const;

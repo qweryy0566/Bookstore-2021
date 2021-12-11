@@ -3,7 +3,8 @@
 // .......... class Node ..........
 
 Node::Node() = default;
-Node::Node(const string &key_, const int &value_) : value(value_) {
+Node::Node(const string &key_, const int &value_, const int &offset_)
+    : offset(offset_), value(value_) {
   strcpy(key, key_.c_str());
 }
 
