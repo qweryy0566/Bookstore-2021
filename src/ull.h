@@ -9,19 +9,19 @@
 #include "storge.hpp"
 using std::string;
 using std::vector;
-const int kMaxLen = 66;
-const int kBlockLen = 384, kBlockCnt = 272;
+const int kMaxLen = 65;
+const int kBlockLen = 392, kBlockCnt = 256;
 
 class Node {
  private:
-  int offset = -1, value;
+  int offset = 0, value;
   char key[kMaxLen] = "";
 
  public:
   Node();
   string Key() const;
   const int &Value() const;
-  Node(const string &, const int &, const int &offset_ = -1);
+  Node(const string &, const int &, const int &offset_ = 0);
   bool operator<(const Node &) const;
   bool operator==(const Node &) const;
   bool operator!=(const Node &) const;
