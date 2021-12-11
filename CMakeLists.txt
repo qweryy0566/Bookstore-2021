@@ -1,0 +1,5 @@
+cmake_minimum_required(VERSION 3.10.2)
+project(BookStore_2021)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++17 -O2 -Wall")
+include_directories(${PROJECT_SOURCE_DIR}/src/)
+add_executable(code src/main.cpp)
