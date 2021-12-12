@@ -2,7 +2,7 @@
 
 > SJTU ACM班 2021级 程序设计课程大作业
 
-[![GitHub](https://img.shields.io/github/license/qweryy0566/Bookstore-2021)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![GitHub](https://img.shields.io/github/license/qweryy0566/Bookstore-2021)](https://www.mozilla.org/en-US/MPL/2.0/)
 [![GitHub repo size](https://img.shields.io/github/repo-size/qweryy0566/Bookstore-2021)](https://github.com/qweryy0566/Bookstore-2021/archive/refs/heads/main.zip)
 [![Latest tag](https://img.shields.io/github/v/tag/qweryy0566/Bookstore-2021)](https://github.com/qweryy0566/Bookstore-2021/tags)
 [![Last commit](https://img.shields.io/github/last-commit/qweryy0566/Bookstore-2021)](https://github.com/qweryy0566/Bookstore-2021/commits/)
