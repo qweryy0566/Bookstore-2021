@@ -2,10 +2,10 @@
 
 > SJTU ACM班 2021级 程序设计课程大作业
 
-[![GitHub](https://img.shields.io/github/license/ACM-Programming-2021/Bookstore-2021)](https://www.gnu.org/licenses/gpl-3.0.html)
-[![GitHub repo size](https://img.shields.io/github/repo-size/ACM-Programming-2021/Bookstore-2021)](https://github.com/ACM-Programming-2021/Bookstore-2021/archive/refs/heads/main.zip)
-[![Latest tag](https://img.shields.io/github/v/tag/ACM-Programming-2021/Bookstore-2021)](https://github.com/ACM-Programming-2021/Bookstore-2021/tags)
-[![Last commit](https://img.shields.io/github/last-commit/ACM-Programming-2021/Bookstore-2021)](https://github.com/ACM-Programming-2021/Bookstore-2021/commits/)
+[![GitHub](https://img.shields.io/github/license/qweryy0566/Bookstore-2021)](https://www.gnu.org/licenses/gpl-3.0.html)
+[![GitHub repo size](https://img.shields.io/github/repo-size/qweryy0566/Bookstore-2021)](https://github.com/qweryy0566/Bookstore-2021/archive/refs/heads/main.zip)
+[![Latest tag](https://img.shields.io/github/v/tag/qweryy0566/Bookstore-2021)](https://github.com/qweryy0566/Bookstore-2021/tags)
+[![Last commit](https://img.shields.io/github/last-commit/qweryy0566/Bookstore-2021)](https://github.com/qweryy0566/Bookstore-2021/commits/)
 
 
 
@@ -48,7 +48,7 @@
 - 关于本仓库
   - 本仓库为模板仓库，可以点击上方绿色的 `Use this template` 按钮复制出一份属于你的仓库用于完成作业。助教也**十分鼓励学生自行新建仓库完成作业**
     - 本仓库中主要文件为助教提供的块状链表链接库，具体使用方式见仓库中 `bin` 和 `src` 文件夹中内容
-    - 如果使用仓库模板，应该自定义 `README.md` 内容（其中如 ![GitHub top language](https://img.shields.io/github/languages/top/ACM-Programming-2021/Bookstore-2021) 这样的 Shield，将链接中的 `/:user/:repo` 改成个人信息即可，详见 [Shields.IO](https://shields.io/)）
+    - 如果使用仓库模板，应该自定义 `README.md` 内容（其中如 ![GitHub top language](https://img.shields.io/github/languages/top/qweryy0566/Bookstore-2021) 这样的 Shield，将链接中的 `/:user/:repo` 改成个人信息即可，详见 [Shields.IO](https://shields.io/)）
   - 关于本仓库有任何问题欢迎联系助教，也可以直接 Pull request
   - 本仓库内容将维护至本作业结束，请保持关注题面更改，助教也会通过 QQ 群发布相关通知
 
