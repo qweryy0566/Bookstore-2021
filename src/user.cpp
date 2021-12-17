@@ -60,6 +60,7 @@ void UserManager::ChangeCount(const int &delta) {
   tmp += delta;
   users.WriteInfo(tmp, 1);
 }
+const User &UserManager::CurrentUser() const { return stack.back(); }
 
 UserManager::UserManager(const string &file)
     : users(file + ".bin"), list(file + "list") {
@@ -71,8 +72,6 @@ UserManager::UserManager(const string &file)
   }
   stack.push_back(User("", "", "", kGuest));
 }
-
-const User &UserManager::CurrentUser() const { return stack.back(); }
 
 // {0}
 void UserManager::Login(const string &id, const string &password) {
@@ -91,6 +90,7 @@ void UserManager::Login(const string &id, const string &password) {
 // {1}
 void UserManager::Logout() {
   if (CurrentUser().privilege < 1) throw Exception();
+  --login_id[CurrentUser().Id()];
   stack.pop_back();
 }
 // {0}
@@ -100,6 +100,7 @@ void UserManager::Register(const string &id, const string &password,
   if (list.Find(Node(id))) throw Exception();
   int index = users.Write(tmp);
   list.Add(Node(id, 0, index));
+  ChangeCount(1);
 }
 // {1}
 void UserManager::Passwd(const string &id, const string &old_password,
@@ -127,6 +128,7 @@ void UserManager::AddUser(const string &id, const string &password,
     throw Exception();
   int index = users.Write(tmp);
   list.Add(Node(id, 0, index));
+  ChangeCount(1);
 }
 // {7}
 void UserManager::DeleteUser(const string &id) {
@@ -136,5 +138,5 @@ void UserManager::DeleteUser(const string &id) {
   if (!index || login_id[id]) throw Exception();
   users.Delete(index);
   list.Del(Node(id));
-  --login_id[id];
+  ChangeCount(-1);
 }

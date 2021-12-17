@@ -46,10 +46,10 @@ class UserManager {
 
   const int Count();
   void ChangeCount(const int &);
+  const User &CurrentUser() const;
 
  public:
   UserManager(const string &);
-  const User &CurrentUser() const;
   void Login(const string &, const string &);
   void Logout();
   void Register(const string &, const string &, const string &);
