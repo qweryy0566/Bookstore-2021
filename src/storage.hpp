@@ -1,5 +1,5 @@
-#ifndef BOOKSTORE_STORGE_HPP_
-#define BOOKSTORE_STORGE_HPP_
+#ifndef BOOKSTORE_STORAGE_HPP_
+#define BOOKSTORE_STORAGE_HPP_
 
 #include <fstream>
 
@@ -76,4 +76,4 @@ class MemoryRiver {
   }
 };
 
-#endif  // BOOKSTORE_STORGE_HPP_
+#endif  // BOOKSTORE_STORAGE_HPP_

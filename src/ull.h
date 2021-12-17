@@ -6,11 +6,11 @@
 #include <string>
 #include <vector>
 
-#include "storge.hpp"
+#include "storage.hpp"
 using std::string;
 using std::vector;
 const int kMaxLen = 65;
-const int kBlockLen = 384, kBlockCnt = 272;
+const int kBlockLen = 200, kBlockCnt = 501;
 
 class Node {
  private:
