@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "exception.hpp"
 #include "storage.hpp"
 using std::string;
 using std::vector;
@@ -21,7 +22,8 @@ class Node {
   Node();
   string Key() const;
   const int &Value() const;
-  Node(const string &, const int &, const int &offset_ = 0);
+  const int &Offset() const;
+  Node(const string &, const int &value_ = 0, const int &offset_ = 0);
   bool operator<(const Node &) const;
   bool operator==(const Node &) const;
   bool operator!=(const Node &) const;
@@ -38,6 +40,8 @@ class Block {
   const int &Size() const;
   const Node &Front() const;
   const Node &Back() const;
+  // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回 0（没有数据存在开头）。
+  int Find(const Node &) const;
   // 向该块添加元素。如果块过大，返回 false。
   bool Add(const Node &);
   // 删除该块的元素。如果没有该元素，返回 false。
@@ -56,6 +60,7 @@ class BlockIndex {
 
  public:
   void Move(const int &, const int &);
+  // 确定 obj 在第几个块中
   int FindPosition(const Node &) const;
 };
 
@@ -71,6 +76,8 @@ class BlockList {
   explicit BlockList(const string &);
   bool Add(const Node &);
   bool Del(const Node &);
+  // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回 0（没有数据存在开头）。
+  int Find(const Node &);
   bool Query(const string &, vector<int> &);
 };
 

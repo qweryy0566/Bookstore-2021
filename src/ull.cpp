@@ -10,6 +10,7 @@ Node::Node(const string &key_, const int &value_, const int &offset_)
 
 string Node::Key() const { return key; }
 const int &Node::Value() const { return value; }
+const int &Node::Offset() const { return offset; }
 bool Node::operator<(const Node &rhs) const {
   if (!strcmp(key, rhs.key)) return value < rhs.value;
   return strcmp(key, rhs.key) < 0;
@@ -32,10 +33,15 @@ const int &Block::Size() const { return siz; }
 const Node &Block::Front() const { return array[0]; }
 const Node &Block::Back() const { return array[siz - 1]; }
 
+int Block::Find(const Node &obj) const {
+  int pos = std::lower_bound(array, array + siz, obj) - array;
+  return array[pos] != obj ? array[pos].Offset() : 0;
+}
+
 // 向该块添加元素。如果块过大，返回 false。
 bool Block::Add(const Node &obj) {
   int pos = std::lower_bound(array, array + siz, obj) - array;
-  if (array[pos] == obj) return 1;  // TODO : 抛出异常
+  if (array[pos] == obj) throw Exception();
   ++siz;
   for (int i = siz - 1; i > pos; --i) array[i] = array[i - 1];
   array[pos] = obj;
@@ -45,7 +51,7 @@ bool Block::Add(const Node &obj) {
 // 删除该块的元素。如果没有该元素，返回 false。
 bool Block::Del(const Node &obj) {
   int pos = std::lower_bound(array, array + siz, obj) - array;
-  if (array[pos] != obj) return 0;
+  if (array[pos] != obj) throw Exception();
   for (--siz; pos < siz; ++pos) array[pos] = array[pos + 1];
   array[siz] = Node();
   return 1;
@@ -129,6 +135,15 @@ bool BlockList::Del(const Node &obj) {
   }
   blocks_index.Update(index);
   return 1;
+}
+
+int BlockList::Find(const Node &obj) {
+  BlockIndex index;
+  blocks_index.Read(index);
+  Block tmp;
+  int pos = index.FindPosition(obj);
+  blocks.Read(tmp, index.offset[pos]);
+  return tmp.Find(obj);
 }
 
 bool BlockList::Query(const string &key, vector<int> &ans) {

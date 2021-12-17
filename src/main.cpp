@@ -1,5 +1,6 @@
 #include <bits/stdc++.h>
 
+#include "exception.hpp"
 #include "storage.hpp"
 #include "user.h"
 using std::cin;

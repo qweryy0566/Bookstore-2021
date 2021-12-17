@@ -8,7 +8,7 @@ using std::ifstream;
 using std::ofstream;
 using std::string;
 
-template <class T>
+template <class T, int info_len = 0>
 class MemoryRiver {
  private:
   fstream file;
@@ -23,6 +23,8 @@ class MemoryRiver {
     if (!file) {
       file.open(file_name, std::ios::out);
       file.write(reinterpret_cast<char *>(&del_head), 4);
+      for (int i = 0, tmp = 0; i < info_len; ++i)
+        file.write(reinterpret_cast<char *>(&tmp), 4);
       Write(T());
     } else {
       file.read(reinterpret_cast<char *>(&del_head), 4);
@@ -30,7 +32,25 @@ class MemoryRiver {
     file.close();
   }
 
-  //在文件合适位置写入类对象 t，并返回写入的位置索引 index
+  // 读取文件开头第 n 个信息
+  void ReadInfo(int &t, const int &n = 1) {
+    if (n > info_len) return;
+    file.open(file_name);
+    file.seekg(n - 1 << 2);
+    file.read(reinterpret_cast<char *>(&t), 4);
+    file.close();
+  }
+
+  // 写入文件开头第 n 个信息
+  void WriteInfo(int &t, const int &n = 1) {
+    if (n > info_len) return;
+    file.open(file_name);
+    file.seekp(n - 1 << 2);
+    file.write(reinterpret_cast<char *>(&t), 4);
+    file.close();
+  }
+
+  // 在文件合适位置写入类对象 t，并返回写入的位置索引 index
   int Write(const T &t) {
     file.open(file_name);
     int pos, del_nxt = 0;
@@ -48,7 +68,7 @@ class MemoryRiver {
     return pos;
   }
 
-  //用 t 的值更新位置索引 index 对应的对象
+  // 用 t 的值更新位置索引 index 对应的对象
   void Update(const T &t, const int &index = 4) {
     file.open(file_name);
     file.seekp(index + 4);
