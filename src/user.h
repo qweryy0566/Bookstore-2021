@@ -39,7 +39,7 @@ class User {
 
 class UserManager {
  private:
-  MemoryRiver<User, 1> users;  // 开头存一个数量
+  MemoryRiver<User, 1> users;  // 开头存一个数表示用户数量（不含来宾）
   BlockList list;
   vector<User> stack;
   unordered_map<string, int> login_id;

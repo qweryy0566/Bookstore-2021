@@ -19,9 +19,8 @@ bool IsUserPassword(const string &s) {
   return 1;
 }
 bool IsUserPrivilege(const string &s) {
-  if (s.length() > 1 || !isdigit(s.front())) return 0;
-  return s.front() == '0' || s.front() == '1' || s.front() == '3' ||
-         s.front() == '7';
+  return s.length() == 1 &&
+         (s[0] == '0' || s[0] == '1' || s[0] == '3' || s[0] == '7');
 }
 
 // .......... class User ..........
@@ -64,7 +63,7 @@ const User &UserManager::CurrentUser() const { return stack.back(); }
 
 UserManager::UserManager(const string &file)
     : users(file + ".bin"), list(file + "list") {
-  if (!Count()) {
+  if (!Count()) {  // 注意到 root 一旦创建就不可能被删除
     User root("root", "sjtu", "", kRoot);
     int index = users.Write(root);
     list.Add(Node("root", 0, index));
@@ -116,6 +115,7 @@ void UserManager::Passwd(const string &id, const string &old_password,
     throw Exception();
   }
   tmp.ChangePassword(new_password);
+  // 由于 id 没变，不需要修改块链内信息。
   users.Update(tmp, index);
 }
 // {3}
