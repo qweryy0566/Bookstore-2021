@@ -23,6 +23,7 @@ class BookStore {
   void VisitDelete(vector<string> &);
 
   void VisitSelect(vector<string> &);
+  void VisitModify(vector<string> &);
 };
 
 #endif  // BOOKSTORE_COMMANDS_H_

@@ -12,6 +12,7 @@
 #include "exception.hpp"
 using std::cin;
 using std::cout;
+using std::pair;
 using std::unordered_map;
 using std::string;
 using std::vector;

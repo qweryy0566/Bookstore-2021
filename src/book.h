@@ -8,17 +8,19 @@ using std::string;
 using std::unordered_map;
 using std::vector;
 
-const int kBookISBN = 20, kBookKeyword = 60, kBookName = 60;
+const int kBookIsbn = 20, kBookKeyword = 60, kBookName = 60;
 // BookName 和 BookAuthor 共用判断函数和最大长度。
 
-bool IsBookISBN(const string &);
+bool IsBookIsbn(const string &);
 bool IsBookName(const string &);  // author 和单个 keyword 规则相同
+bool IsBookAuthor(const string &);
+bool IsBookKeyword(const string &);  // 单个 keyword
 bool IsBookCount(const string &);
 bool IsBookPrice(const string &);
 
 class Book {
  private:
-  char isbn[kBookISBN + 1] = "", keywords[kBookKeyword + 1] = "";
+  char isbn[kBookIsbn + 1] = "", keywords[kBookKeyword + 1] = "";
   char name[kBookName + 1] = "", author[kBookName + 1] = "";
   int count = 0;
   double price = 0;
@@ -28,6 +30,16 @@ class Book {
   explicit Book(const string &isbn_, const int count_ = 0,
                 const double price_ = 0, const string &keywords_ = "",
                 const string &name_ = "", const string &author_ = "");
+  const string Isbn() const;
+  const string Name() const;
+  const string Author() const;
+  const string Keywords() const;
+  const double &Price() const;
+  void ChangeIsbn(const string &);
+  void ChangeName(const string &);
+  void ChangeAuthor(const string &);
+  void ChangeKeywords(const string &);
+  void ChangePrice(const double &);
 };
 
 class BookManager {
@@ -38,6 +50,12 @@ class BookManager {
  public:
   void Init(const string &);
   int Select(const string &);
+  int Find(const string &);  // 查找是否已经存在该 isbn.
+  void ModifyIsbn(const int &, const string &);
+  void ModifyName(const int &, const string &);
+  void ModifyAuthor(const int &, const string &);
+  void ModifyKeywords(const int &, const string &, const vector<string> &);
+  void ModifyPrice(const int &, const string &);
 };
 
 #endif  // BOOKSTORE_BOOK_H_

@@ -1,25 +1,31 @@
 #include "book.h"
 
-bool IsBookISBN(const string &s) {
-  if (s.length() > kBookISBN) return 0;
+bool IsBookIsbn(const string &s) {
+  if (s.empty() || s.length() > kBookIsbn) return 0;
   for (auto c : s)
     if (!isprint(c)) return 0;
   return 1;
 }
 bool IsBookName(const string &s) {
-  if (s.length() > kBookName) return 0;
+  if (s.empty() || s.length() > kBookName) return 0;
   for (auto c : s)
     if (!isprint(c) || c == '\"') return 0;
   return 1;
 }
+bool IsBookAuthor(const string &s) {
+  return IsBookName(s);
+}
+bool IsBookKeyword(const string &s) {
+  return IsBookName(s);
+}
 bool IsBookCount(const string &s) {
-  if (s.length() > 10) return 0;
+  if (s.empty() || s.length() > 10) return 0;
   for (auto c : s)
     if (!isdigit(c)) return 0;
   return 1;
 }
 bool IsBookPrice(const string &s) {
-  if (s.length() > 13) return 0;
+  if (s.empty() || s.length() > 13) return 0;
   int cnt = 0;
   for (auto c : s)
     if (!isdigit(c)) {
@@ -36,13 +42,39 @@ Book::Book(const string &isbn_, const int count_, const double price_,
            const string &keywords_, const string &name_, const string &author_)
     : Book() {
   // 进来之前必须先确定 keywords 的合法性。
-  if (!IsBookISBN(isbn_) || !IsBookName(name_) || !IsBookName(author_))
+  if (!IsBookIsbn(isbn_) || !IsBookName(name_) || !IsBookName(author_))
     throw Exception();
   count = count_, price = price_;
   strcpy(isbn, isbn_.c_str());
   strcpy(keywords, keywords_.c_str());
   strcpy(name, name_.c_str());
   strcpy(author, author_.c_str());
+}
+
+const string Book::Isbn() const { return isbn; }
+const string Book::Name() const { return name; }
+const string Book::Author() const { return author; }
+const string Book::Keywords() const { return keywords; }
+const double &Book::Price() const { return price; }
+
+void Book::ChangeIsbn(const string &str) {
+  memset(isbn, 0, sizeof(isbn));
+  strcpy(isbn, str.c_str());
+}
+void Book::ChangeName(const string &str) {
+  memset(name, 0, sizeof(name));
+  strcpy(name, str.c_str());
+}
+void Book::ChangeAuthor(const string &str) {
+  memset(author, 0, sizeof(author));
+  strcpy(author, str.c_str());
+}
+void Book::ChangeKeywords(const string &str) {
+  memset(keywords, 0, sizeof(keywords));
+  strcpy(keywords, str.c_str());
+}
+void Book::ChangePrice(const double &num) {
+  price = num;
 }
 
 // .......... class BookManager ..........
@@ -60,7 +92,55 @@ int BookManager::Select(const string &isbn) {
   int index = isbn_list.Find(Node(isbn));
   if (!index) {
     index = books.Write(tmp);
-    isbn_list.Add(Node(isbn, 0, index));
+    isbn_list.Add(Node(isbn, "", index));
   }
   return index;
+}
+
+int BookManager::Find(const string &isbn) {
+  return isbn_list.Find(Node(isbn));
+}
+
+void BookManager::ModifyIsbn(const int &index, const string &str) {
+  Book tmp;
+  books.Read(tmp, index);
+  isbn_list.Del(Node(tmp.Isbn()));
+  tmp.ChangeIsbn(str);
+  isbn_list.Add(Node(tmp.Isbn()));
+  books.Update(tmp, index);
+}
+void BookManager::ModifyName(const int &index, const string &str) {
+  Book tmp;
+  books.Read(tmp, index);
+  name_list.Del(Node(tmp.Name(), tmp.Isbn()));
+  tmp.ChangeName(str);
+  name_list.Add(Node(tmp.Name(), tmp.Isbn()));
+  books.Update(tmp, index);
+}
+void BookManager::ModifyAuthor(const int &index, const string &str) {
+  Book tmp;
+  books.Read(tmp, index);
+  author_list.Del(Node(tmp.Author(), tmp.Isbn()));
+  tmp.ChangeAuthor(str);
+  author_list.Add(Node(tmp.Author(), tmp.Isbn()));
+  books.Update(tmp, index);
+}
+void BookManager::ModifyKeywords(const int &index, const string &str,
+                                 const vector<string> &new_keywords) {
+  Book tmp;
+  books.Read(tmp, index);
+  vector<string> old_keywords;
+  SpiltString(tmp.Keywords(), old_keywords, '|');
+  for (auto it : old_keywords)
+    keyword_list.Del(Node(it, tmp.Isbn()));
+  tmp.ChangeKeywords(str);
+  for (auto it : new_keywords)
+    keyword_list.Add(Node(it, tmp.Isbn()));
+  books.Update(tmp, index);
+}
+void BookManager::ModifyPrice(const int &index, const string &str) {
+  Book tmp;
+  books.Read(tmp, index);
+  tmp.ChangePrice(std::stod(str));
+  books.Update(tmp, index);
 }

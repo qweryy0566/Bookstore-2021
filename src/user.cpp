@@ -61,7 +61,7 @@ void UserManager::Init(const string &file) {
   if (!list.Find(Node("root"))) {  // 注意到 root 一旦创建就不可能被删除
     User root("root", "sjtu", "", kRoot);
     int index = users.Write(root);
-    list.Add(Node("root", 0, index));
+    list.Add(Node("root", "", index));
   }
   stack.push_back(User("", "", "", kGuest));
 }
@@ -92,7 +92,7 @@ void UserManager::Register(const string &id, const string &password,
   User tmp(id, password, name);
   if (list.Find(Node(id))) throw Exception();
   int index = users.Write(tmp);
-  list.Add(Node(id, 0, index));
+  list.Add(Node(id, "", index));
 }
 // {1}
 void UserManager::Passwd(const string &id, const string &old_password,
@@ -120,7 +120,7 @@ void UserManager::AddUser(const string &id, const string &password,
   if (tmp.privilege >= CurrentUser().privilege || list.Find(Node(id)))
     throw Exception();
   int index = users.Write(tmp);
-  list.Add(Node(id, 0, index));
+  list.Add(Node(id, "", index));
 }
 // {7}
 void UserManager::DeleteUser(const string &id) {

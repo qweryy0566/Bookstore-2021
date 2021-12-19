@@ -30,9 +30,9 @@ void BookStore::Interprete(string &command) {
   } else if (argv[0] == "buy") {
 
   } else if (argv[0] == "select") {
-
+    VisitSelect(argv);
   } else if (argv[0] == "modify") {
-
+    VisitModify(argv);
   } else if (argv[0] == "import") {
 
   } else if (argv[0] == "report") {
@@ -95,3 +95,57 @@ void BookStore::SelectBook(const string &isbn) {
   user_manager.SelectBook(book_manager.Select(isbn));
 }
 
+// modify (-ISBN=[ISBN] | -name="[Book-Name]" | -author="[Author]" |
+// -keyword="[Keyword]" | -price=[Price])+
+void BookStore::VisitModify(vector<string> &argv) {
+  int index = user_manager.GetBookOffset();
+  if (argv.size() == 1 || !index) throw Exception();
+  // 第一遍：检查是否有重复或非法的附加参数
+  unordered_map<string, bool> vis;
+  pair<string, string> param[argv.size()];
+  vector<string> keywords;  // 存储分隔开来的 keyword.
+  for (int i = 1; i < argv.size(); ++i) {
+    int pos = argv[i].find('=');
+    param[i] = std::make_pair(argv[i].substr(0, pos), argv[i].substr(pos + 1));
+    if (vis.find(param[i].first) != vis.end()) throw Exception();
+    string &str = param[i].second;
+    if (param[i].first == "-ISBN") {  // 注意判断没有重复。
+      if (!IsBookIsbn(str) || book_manager.Find(str)) throw Exception();
+    } else if (param[i].first == "-name") {
+      if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
+        throw Exception();
+      str.substr(1), str.pop_back();
+      if (!IsBookName(str)) throw Exception();
+    } else if (param[i].first == "-author") {
+      if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
+        throw Exception();
+      str.substr(1), str.pop_back();
+      if (!IsBookAuthor(str)) throw Exception();
+    } else if (param[i].first == "-keyword") {
+      if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
+        throw Exception();
+      str.substr(1), str.pop_back();
+      SpiltString(str, keywords, '|');
+      for (auto it : keywords)
+        if (!IsBookKeyword(it)) throw Exception();
+    } else if (param[i].first == "-price") {
+      if (!IsBookPrice(str)) throw Exception();
+    } else {
+      throw Exception();
+    }
+    vis[param[i].first] = 1;
+  }
+  // 第二遍：确保指令合法的情况下依次修改。
+  for (int i = 1; i < argv.size(); ++i)
+    if (param[i].first == "-ISBN") {
+      book_manager.ModifyIsbn(index, param[i].second);
+    } else if (param[i].first == "-name") {
+      book_manager.ModifyName(index, param[i].second);
+    } else if (param[i].first == "-author") {
+      book_manager.ModifyAuthor(index, param[i].second);
+    } else if (param[i].first == "-keyword") {
+      book_manager.ModifyKeywords(index, param[i].second, keywords);
+    } else if (param[i].first == "-price") {
+      book_manager.ModifyPrice(index, param[i].second);
+    }
+}

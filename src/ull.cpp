@@ -3,20 +3,22 @@
 // .......... class Node ..........
 
 Node::Node() = default;
-Node::Node(const string &key_, const int &value_, const int &offset_) : Node() {
-  offset = offset_, value = value_;
+Node::Node(const string &key_, const string &value_, const int &offset_)
+    : Node() {
+  offset = offset_;
   strcpy(key, key_.c_str());
+  strcpy(value, value_.c_str());
 }
 
-string Node::Key() const { return key; }
-const int &Node::Value() const { return value; }
+const string Node::Key() const { return key; }
+const string Node::Value() const { return value; }
 const int &Node::Offset() const { return offset; }
 bool Node::operator<(const Node &rhs) const {
-  if (!strcmp(key, rhs.key)) return value < rhs.value;
+  if (!strcmp(key, rhs.key)) return strcmp(value, rhs.value) < 0;
   return strcmp(key, rhs.key) < 0;
 }
 bool Node::operator==(const Node &rhs) const {
-  return !strcmp(key, rhs.key) && value == rhs.value;
+  return !strcmp(key, rhs.key) && !strcmp(value, rhs.value);
 }
 bool Node::operator!=(const Node &rhs) const {
   return !(*this == rhs);
@@ -67,7 +69,7 @@ Block &Block::Merge(const Block &obj) {
   siz += obj.siz;
   return *this;
 }
-void Block::Query(const string &key, vector<int> &ans) const {
+void Block::Query(const string &key, vector<string> &ans) const {
   for (int i = 0; i < siz; ++i)
     if (key == array[i].Key()) ans.push_back(array[i].Value());
 }
@@ -147,7 +149,7 @@ int BlockList::Find(const Node &obj) {
   return tmp.Find(obj);
 }
 
-bool BlockList::Query(const string &key, vector<int> &ans) {
+bool BlockList::Query(const string &key, vector<string> &ans) {
   BlockIndex index;
   blocks_index.Read(index);
   Block tmp;

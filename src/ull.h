@@ -15,15 +15,16 @@ const int kBlockLen = 1000, kBlockCnt = 3000;
 
 class Node {
  private:
-  int offset = 0, value;
-  char key[kMaxLen] = "";
+  int offset = 0;
+  char key[kMaxLen] = "", value[kMaxLen] = "";
 
  public:
   Node();
-  string Key() const;
-  const int &Value() const;
+  const string Key() const;
+  const string Value() const;
   const int &Offset() const;
-  explicit Node(const string &, const int &value_ = 0, const int &offset_ = 0);
+  explicit Node(const string &, const string &value_ = "",
+                const int &offset_ = 0);
   bool operator<(const Node &) const;
   bool operator==(const Node &) const;
   bool operator!=(const Node &) const;
@@ -40,7 +41,8 @@ class Block {
   const int &Size() const;
   const Node &Front() const;
   const Node &Back() const;
-  // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回 0（没有数据存在开头）。
+  // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回 0
+  // （没有数据存在开头）。
   int Find(const Node &) const;
   // 向该块添加元素。如果块过大，返回 false。
   bool Add(const Node &);
@@ -48,7 +50,7 @@ class Block {
   bool Del(const Node &);
   Block Split(const int &);
   Block &Merge(const Block &);
-  void Query(const string &, vector<int> &) const;
+  void Query(const string &, vector<string> &) const;
 };
 
 class BlockIndex {
@@ -75,9 +77,10 @@ class BlockList {
   void Init(const string &);
   bool Add(const Node &);
   bool Del(const Node &);
-  // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回 0（没有数据存在开头）。
+  // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回
+  // 0（没有数据存在开头）。
   int Find(const Node &);
-  bool Query(const string &, vector<int> &);
+  bool Query(const string &, vector<string> &);
 };
 
 #endif  // BOOKSTORE_ULL_H_
