@@ -3,8 +3,8 @@
 // .......... class Node ..........
 
 Node::Node() = default;
-Node::Node(const string &key_, const int &value_, const int &offset_)
-    : offset(offset_), value(value_) {
+Node::Node(const string &key_, const int &value_, const int &offset_) : Node() {
+  offset = offset_, value = value_;
   strcpy(key, key_.c_str());
 }
 
@@ -35,7 +35,7 @@ const Node &Block::Back() const { return array[siz - 1]; }
 
 int Block::Find(const Node &obj) const {
   int pos = std::lower_bound(array, array + siz, obj) - array;
-  return array[pos] != obj ? array[pos].Offset() : 0;
+  return array[pos] == obj ? array[pos].Offset() : 0;
 }
 
 // 向该块添加元素。如果块过大，返回 false。

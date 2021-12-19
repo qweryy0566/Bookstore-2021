@@ -10,7 +10,7 @@
 #include "storage.hpp"
 using std::string;
 using std::vector;
-const int kMaxLen = 65;
+const int kMaxLen = 61;
 const int kBlockLen = 1000, kBlockCnt = 3000;
 
 class Node {

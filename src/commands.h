@@ -20,6 +20,12 @@ class BookStore {
  public:
   void Init();
   void Interprete(string &);
+  void VisitSu(vector<string> &);
+  void VisitLogout(vector<string> &);
+  void VisitRegister(vector<string> &);
+  void VisitPasswd(vector<string> &);
+  void VisitUseradd(vector<string> &);
+  void VisitDelete(vector<string> &);
 };
 
 #endif  // BOOKSTORE_COMMANDS_H_

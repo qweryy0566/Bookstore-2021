@@ -14,7 +14,7 @@ class MemoryRiver {
  private:
   fstream file;
   string file_name;
-  int del_head = 0, sizeofT = sizeof(T);
+  int del_head = 0, sizeofT = sizeof(T);  // del_head 在最开头
 
  public:
   void Init(const string &name) {
@@ -36,7 +36,7 @@ class MemoryRiver {
   void ReadInfo(int &t, const int &n = 1) {
     if (n > info_len) return;
     file.open(file_name);
-    file.seekg(n - 1 << 2);
+    file.seekg(n << 2);  // 注意最开头有 del_head
     file.read(reinterpret_cast<char *>(&t), 4);
     file.close();
   }
@@ -45,7 +45,7 @@ class MemoryRiver {
   void WriteInfo(int &t, const int &n = 1) {
     if (n > info_len) return;
     file.open(file_name);
-    file.seekp(n - 1 << 2);
+    file.seekp(n << 2);  // 注意最开头有 del_head
     file.write(reinterpret_cast<char *>(&t), 4);
     file.close();
   }

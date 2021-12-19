@@ -10,8 +10,8 @@
 #include "exception.hpp"
 #include "ull.h"
 using std::string;
-using std::vector;
 using std::unordered_map;
+using std::vector;
 const int kMaxOperation = 1e5 + 9;
 const int kUserId = 30, kUserPassword = 30, kUserName = 30;
 enum Privilege { kGuest = 0, kCustomer = 1, kWorker = 3, kRoot = 7 };
@@ -23,7 +23,8 @@ bool IsUserPrivilege(const string &);
 
 class User {
  private:
-  char name[kUserName + 1], id[kUserId + 1], password[kUserPassword + 1];
+  char id[kUserId + 1] = "", password[kUserPassword + 1] = "";
+  char name[kUserName + 1] = "";
 
  public:
   Privilege privilege = kGuest;
@@ -41,7 +42,7 @@ class UserManager {
  private:
   MemoryRiver<User, 1> users;  // 开头存一个数表示用户数量（不含来宾）
   BlockList list;
-  vector<User> stack;
+  vector<User> stack;  // TODO : 存在 bug, 密码可能被更改，不过不影响本题。
   unordered_map<string, int> login_id;
 
   const int Count();

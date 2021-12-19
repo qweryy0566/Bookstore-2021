@@ -27,7 +27,7 @@ bool IsUserPrivilege(const string &s) {
 
 User::User() = default;
 User::User(const string &id_, const string &password_, const string &name_,
-           const Privilege &privilege_) {
+           const Privilege &privilege_) : User() {
   if (!IsUserId(id_) || !IsUserPassword(password_) || !IsUserName(name_))
     throw Exception();
   privilege = privilege_;
@@ -42,6 +42,7 @@ const string User::Password() const { return password; }
 
 void User::ChangePassword(const string &new_password) {
   if (!IsUserPassword(new_password)) throw Exception();
+  memset(password, 0, sizeof(password));
   strcpy(password, new_password.c_str());
 }
 
