@@ -241,11 +241,11 @@ public:
 
 + book.dat
 
-  储存书本信息：文件开头是一个整数 size 代表书本数量，后跟 size 个 Book 结构体储存具体书本信息
+  储存书本信息：跟 size 个 Book 结构体储存具体书本信息
 
 + user.dat 
 
-  储存用户信息：文件开头是一个整数 size 代表用户数量，后跟 size 个 User 结构体储存具体用户信息
+  储存用户信息：跟 size 个 User 结构体储存具体用户信息
 
 + finance.dat
 

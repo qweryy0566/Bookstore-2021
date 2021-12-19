@@ -1,27 +1,17 @@
 #include "commands.h"
 
-void Arguments(const string &str, vector<string> &argv) {
-  if (str.empty()) return;
-  string::size_type last_pos = 0, pos;
-  do {
-    pos = str.find(' ', last_pos);
-    if (pos > last_pos)
-      argv.push_back(str.substr(last_pos, pos - last_pos));
-    last_pos = pos + 1;
-  } while (last_pos < str.length() && pos != string::npos);
-}
-
 // .......... class BookStore ..........
 
 void BookStore::Init() {
   if (!std::filesystem::exists("data"))
     std::filesystem::create_directory("data");
   user_manager.Init("data/users");
+  book_manager.Init("data/books");
 }
 
 void BookStore::Interprete(string &command) {
   vector<string> argv;
-  Arguments(command, argv);
+  SpiltString(command, argv);
   if (argv.empty()) return;
   if (argv[0] == "su") {
     VisitSu(argv);
@@ -95,3 +85,13 @@ void BookStore::VisitDelete(vector<string> &argv) {
   if (argv.size() != 2) throw Exception();
   user_manager.DeleteUser(argv[1]);
 }
+
+// select [ISBN]
+void BookStore::VisitSelect(vector<string> &argv) {
+  if (argv.size() != 2) throw Exception();
+  SelectBook(argv[1]);
+}
+void BookStore::SelectBook(const string &isbn) {
+  user_manager.SelectBook(book_manager.Select(isbn));
+}
+

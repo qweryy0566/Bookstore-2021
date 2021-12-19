@@ -13,10 +13,7 @@ bool IsUserId(const string &s) {
   return 1;
 }
 bool IsUserPassword(const string &s) {
-  if (s.length() > kUserPassword) return 0;
-  for (auto c : s)
-    if (!isalnum(c) && c != '_') return 0;
-  return 1;
+  return IsUserId(s);
 }
 bool IsUserPrivilege(const string &s) {
   return s.length() == 1 &&
@@ -27,7 +24,8 @@ bool IsUserPrivilege(const string &s) {
 
 User::User() = default;
 User::User(const string &id_, const string &password_, const string &name_,
-           const Privilege &privilege_) : User() {
+           const Privilege &privilege_)
+    : User() {
   if (!IsUserId(id_) || !IsUserPassword(password_) || !IsUserName(name_))
     throw Exception();
   privilege = privilege_;
@@ -48,28 +46,22 @@ void User::ChangePassword(const string &new_password) {
 
 // .......... class UserManager ..........
 
-const int UserManager::Count() {
-  int tmp;
-  users.ReadInfo(tmp, 1);
-  return tmp;
+UserManager::LoginUser::LoginUser() = default;
+UserManager::LoginUser::LoginUser(const User &obj) : LoginUser() {
+  privilege = obj.privilege, id = obj.Id();
 }
-// 使得数量加上 delta
-void UserManager::ChangeCount(const int &delta) {
-  int tmp;
-  users.ReadInfo(tmp, 1);
-  tmp += delta;
-  users.WriteInfo(tmp, 1);
+
+const UserManager::LoginUser &UserManager::CurrentUser() const {
+  return stack.back();
 }
-const User &UserManager::CurrentUser() const { return stack.back(); }
 
 void UserManager::Init(const string &file) {
   users.Init(file + ".bin");
   list.Init(file + "_list");
-  if (!Count()) {  // 注意到 root 一旦创建就不可能被删除
+  if (!list.Find(Node("root"))) {  // 注意到 root 一旦创建就不可能被删除
     User root("root", "sjtu", "", kRoot);
     int index = users.Write(root);
     list.Add(Node("root", 0, index));
-    ChangeCount(1);
   }
   stack.push_back(User("", "", "", kGuest));
 }
@@ -91,7 +83,7 @@ void UserManager::Login(const string &id, const string &password) {
 // {1}
 void UserManager::Logout() {
   if (CurrentUser().privilege < 1) throw Exception();
-  --login_id[CurrentUser().Id()];
+  --login_id[CurrentUser().id];
   stack.pop_back();
 }
 // {0}
@@ -101,7 +93,6 @@ void UserManager::Register(const string &id, const string &password,
   if (list.Find(Node(id))) throw Exception();
   int index = users.Write(tmp);
   list.Add(Node(id, 0, index));
-  ChangeCount(1);
 }
 // {1}
 void UserManager::Passwd(const string &id, const string &old_password,
@@ -130,7 +121,6 @@ void UserManager::AddUser(const string &id, const string &password,
     throw Exception();
   int index = users.Write(tmp);
   list.Add(Node(id, 0, index));
-  ChangeCount(1);
 }
 // {7}
 void UserManager::DeleteUser(const string &id) {
@@ -140,5 +130,11 @@ void UserManager::DeleteUser(const string &id) {
   if (!index || login_id[id]) throw Exception();
   users.Delete(index);
   list.Del(Node(id));
-  ChangeCount(-1);
+}
+
+const int &UserManager::GetBookOffset() const {
+  return CurrentUser().book_offset;
+}
+void UserManager::SelectBook(const int &new_book_offset) {
+  stack.back().book_offset = new_book_offset;
 }

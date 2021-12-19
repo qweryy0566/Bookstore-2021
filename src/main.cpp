@@ -1,10 +1,4 @@
-#include <iostream>
-#include <string>
-
 #include "commands.h"
-#include "exception.hpp"
-using std::cin;
-using std::cout;
 
 BookStore bookstore;
 

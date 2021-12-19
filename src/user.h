@@ -1,20 +1,12 @@
 #ifndef BOOKSTORE_USER_H_
 #define BOOKSTORE_USER_H_
 
-#include <cctype>
-#include <cstring>
-#include <string>
-#include <unordered_map>
-#include <vector>
-
 #include "exception.hpp"
 #include "ull.h"
-using std::string;
-using std::unordered_map;
-using std::vector;
-const int kMaxOperation = 1e5 + 9;
-const int kUserId = 30, kUserPassword = 30, kUserName = 30;
+#include "utils.h"
+const int kUserId = 30, kUserName = 30;
 enum Privilege { kGuest = 0, kCustomer = 1, kWorker = 3, kRoot = 7 };
+// password 和 id 规则相同
 
 bool IsUserName(const string &);
 bool IsUserId(const string &);
@@ -23,7 +15,7 @@ bool IsUserPrivilege(const string &);
 
 class User {
  private:
-  char id[kUserId + 1] = "", password[kUserPassword + 1] = "";
+  char id[kUserId + 1] = "", password[kUserId + 1] = "";
   char name[kUserName + 1] = "";
 
  public:
@@ -40,14 +32,19 @@ class User {
 
 class UserManager {
  private:
-  MemoryRiver<User, 1> users;  // 开头存一个数表示用户数量（不含来宾）
+  struct LoginUser {
+    Privilege privilege;
+    int book_offset = 0;  // 该用户选中的图书在文件中的位置。
+    string id;
+    LoginUser();
+    LoginUser(const User &);
+  };
+  MemoryRiver<User> users;  // 开头存一个数表示用户数量（不含来宾）
   BlockList list;
-  vector<User> stack;  // TODO : 存在 bug, 密码可能被更改，不过不影响本题。
+  vector<LoginUser> stack;  // TODO : 存在 bug, 密码可能被更改，不过不影响本题。
   unordered_map<string, int> login_id;
 
-  const int Count();
-  void ChangeCount(const int &);
-  const User &CurrentUser() const;
+  const LoginUser &CurrentUser() const;
 
  public:
   void Init(const string &);
@@ -58,6 +55,8 @@ class UserManager {
   // 注意对外接口传入参数均为 string。
   void AddUser(const string &, const string &, const string &, const string &);
   void DeleteUser(const string &);
+  const int &GetBookOffset() const;
+  void SelectBook(const int &);
 };
 
 #endif  // BOOKSTORE_USER_H_

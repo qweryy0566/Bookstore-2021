@@ -23,7 +23,7 @@ class Node {
   string Key() const;
   const int &Value() const;
   const int &Offset() const;
-  Node(const string &, const int &value_ = 0, const int &offset_ = 0);
+  explicit Node(const string &, const int &value_ = 0, const int &offset_ = 0);
   bool operator<(const Node &) const;
   bool operator==(const Node &) const;
   bool operator!=(const Node &) const;
