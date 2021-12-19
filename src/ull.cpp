@@ -84,9 +84,10 @@ int BlockIndex::FindPosition(const Node &obj) const {
 
 // .......... class BlockList ..........
 
-BlockList::BlockList() = default;
-BlockList::BlockList(const string &file_name)
-    : blocks(file_name + ".bin"), blocks_index(file_name + "_index.bin") {}
+void BlockList::Init(const string &file_name) {
+  blocks.Init(file_name + ".bin");
+  blocks_index.Init(file_name + "_index.bin");
+}
 
 bool BlockList::Add(const Node &obj) {
   BlockIndex index;

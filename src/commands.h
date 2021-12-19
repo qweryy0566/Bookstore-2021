@@ -1,6 +1,7 @@
 #ifndef BOOKSTORE_COMMANDS_H_
 #define BOOKSTORE_COMMANDS_H_
 
+#include <filesystem>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -10,13 +11,14 @@
 using std::string;
 using std::vector;
 
+void Arguments(const string &, vector<string> &);
+
 class BookStore {
  private:
   UserManager user_manager;
 
  public:
-  BookStore();
-
+  void Init();
   void Interprete(string &);
 };
 

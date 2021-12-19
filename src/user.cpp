@@ -28,7 +28,7 @@ bool IsUserPrivilege(const string &s) {
 User::User() = default;
 User::User(const string &id_, const string &password_, const string &name_,
            const Privilege &privilege_) {
-  if (!IsUserId(id_) || IsUserPassword(password_) || !IsUserName(name_))
+  if (!IsUserId(id_) || !IsUserPassword(password_) || !IsUserName(name_))
     throw Exception();
   privilege = privilege_;
   strcpy(name, name_.c_str());
@@ -61,8 +61,9 @@ void UserManager::ChangeCount(const int &delta) {
 }
 const User &UserManager::CurrentUser() const { return stack.back(); }
 
-UserManager::UserManager(const string &file)
-    : users(file + ".bin"), list(file + "list") {
+void UserManager::Init(const string &file) {
+  users.Init(file + ".bin");
+  list.Init(file + "_list");
   if (!Count()) {  // 注意到 root 一旦创建就不可能被删除
     User root("root", "sjtu", "", kRoot);
     int index = users.Write(root);

@@ -72,8 +72,7 @@ class BlockList {
   void DeleteBlock(BlockIndex &, const int &);
 
  public:
-  BlockList();
-  explicit BlockList(const string &);
+  void Init(const string &);
   bool Add(const Node &);
   bool Del(const Node &);
   // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回 0（没有数据存在开头）。

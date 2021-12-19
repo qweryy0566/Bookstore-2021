@@ -49,7 +49,7 @@ class UserManager {
   const User &CurrentUser() const;
 
  public:
-  UserManager(const string &);
+  void Init(const string &);
   void Login(const string &, const string &);
   void Logout();
   void Register(const string &, const string &, const string &);

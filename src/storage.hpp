@@ -1,6 +1,7 @@
 #ifndef BOOKSTORE_STORAGE_HPP_
 #define BOOKSTORE_STORAGE_HPP_
 
+#include <filesystem>
 #include <fstream>
 
 using std::fstream;
@@ -16,9 +17,8 @@ class MemoryRiver {
   int del_head = 0, sizeofT = sizeof(T);
 
  public:
-  MemoryRiver() = default;
-
-  explicit MemoryRiver(const string &file_name) : file_name(file_name) {
+  void Init(const string &name) {
+    file_name = name;
     file.open(file_name);
     if (!file) {
       file.open(file_name, std::ios::out);
