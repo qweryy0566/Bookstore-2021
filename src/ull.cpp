@@ -121,6 +121,7 @@ void BlockList::DeleteBlock(BlockIndex &index, const int &pos) {
   }
 }
 
+// TODO : 对空的块类删除元素会出错。
 bool BlockList::Del(const Node &obj) {
   BlockIndex index;
   blocks_index.Read(index);

@@ -107,6 +107,9 @@ int BookManager::Select(const string &isbn) {
   if (!index) {
     index = books.Write(tmp);
     isbn_list.Add(Node(isbn, "", index));
+    name_list.Add(Node("", isbn, index));
+    author_list.Add(Node("", isbn, index));
+    keyword_list.Add(Node("", isbn, index));
   }
   return index;
 }
@@ -126,7 +129,7 @@ void BookManager::ModifyIsbn(const int &index, const string &str) {
 void BookManager::ModifyName(const int &index, const string &str) {
   Book tmp;
   books.Read(tmp, index);
-  if (!tmp.Name().empty()) name_list.Del(Node(tmp.Name(), tmp.Isbn()));
+  name_list.Del(Node(tmp.Name(), tmp.Isbn()));
   tmp.ChangeName(str);
   name_list.Add(Node(tmp.Name(), tmp.Isbn(), index));
   books.Update(tmp, index);
@@ -134,7 +137,7 @@ void BookManager::ModifyName(const int &index, const string &str) {
 void BookManager::ModifyAuthor(const int &index, const string &str) {
   Book tmp;
   books.Read(tmp, index);
-  if (!tmp.Author().empty()) author_list.Del(Node(tmp.Author(), tmp.Isbn()));
+  author_list.Del(Node(tmp.Author(), tmp.Isbn()));
   tmp.ChangeAuthor(str);
   author_list.Add(Node(tmp.Author(), tmp.Isbn(), index));
   books.Update(tmp, index);
