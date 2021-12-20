@@ -44,7 +44,7 @@ bool IsBookPrice(const string &s) {
 ostream &operator<<(ostream &lhs, const Book &rhs) {
   lhs << rhs.isbn << '\t' << rhs.name << '\t' << rhs.author << '\t'
       << rhs.keywords << '\t' << std::fixed << std::setprecision(2) << rhs.price
-      << '\t' << rhs.count << '\n';
+      << '\t' << rhs.count;
   return lhs;
 }
 
@@ -52,9 +52,7 @@ Book::Book() = default;
 Book::Book(const string &isbn_, const int count_, const double price_,
            const string &keywords_, const string &name_, const string &author_)
     : Book() {
-  // 进来之前必须先确定 keywords 的合法性。
-  if (!IsBookIsbn(isbn_) || !IsBookName(name_) || !IsBookName(author_))
-    throw Exception();
+  // 进来之前必须先确定参数的合法性。
   count = count_, price = price_;
   strcpy(isbn, isbn_.c_str());
   strcpy(keywords, keywords_.c_str());
@@ -122,23 +120,23 @@ void BookManager::ModifyIsbn(const int &index, const string &str) {
   books.Read(tmp, index);
   isbn_list.Del(Node(tmp.Isbn()));
   tmp.ChangeIsbn(str);
-  isbn_list.Add(Node(tmp.Isbn()));
+  isbn_list.Add(Node(tmp.Isbn(), "", index));
   books.Update(tmp, index);
 }
 void BookManager::ModifyName(const int &index, const string &str) {
   Book tmp;
   books.Read(tmp, index);
-  name_list.Del(Node(tmp.Name(), tmp.Isbn()));
+  if (!tmp.Name().empty()) name_list.Del(Node(tmp.Name(), tmp.Isbn()));
   tmp.ChangeName(str);
-  name_list.Add(Node(tmp.Name(), tmp.Isbn()));
+  name_list.Add(Node(tmp.Name(), tmp.Isbn(), index));
   books.Update(tmp, index);
 }
 void BookManager::ModifyAuthor(const int &index, const string &str) {
   Book tmp;
   books.Read(tmp, index);
-  author_list.Del(Node(tmp.Author(), tmp.Isbn()));
+  if (!tmp.Author().empty()) author_list.Del(Node(tmp.Author(), tmp.Isbn()));
   tmp.ChangeAuthor(str);
-  author_list.Add(Node(tmp.Author(), tmp.Isbn()));
+  author_list.Add(Node(tmp.Author(), tmp.Isbn(), index));
   books.Update(tmp, index);
 }
 void BookManager::ModifyKeywords(const int &index, const string &str,
@@ -151,7 +149,7 @@ void BookManager::ModifyKeywords(const int &index, const string &str,
     keyword_list.Del(Node(it, tmp.Isbn()));
   tmp.ChangeKeywords(str);
   for (auto it : new_keywords)
-    keyword_list.Add(Node(it, tmp.Isbn()));
+    keyword_list.Add(Node(it, tmp.Isbn(), index));
   books.Update(tmp, index);
 }
 void BookManager::ModifyPrice(const int &index, const string &str) {
@@ -168,10 +166,11 @@ double BookManager::BuyBook(const int &index, const int &quantity) {
   books.Update(tmp, index);
   return tmp.Price() * quantity;
 }
+// 进货
 void BookManager::AddBook(const int &index, const int &quantity) {
   Book tmp;
   books.Read(tmp, index);
-  tmp.AddCount(quantity);
+  tmp.AddCount(+quantity);
   books.Update(tmp, index);
 }
 

@@ -1,7 +1,7 @@
 #include "log.h"
 
 bool IsTime(const string &s) {
-  if (s.empty() || s.length() > 10) return 0;
+  if (s.length() > 10) return 0;
   for (auto c : s)
     if (!isdigit(c)) return 0;
   return 1;
@@ -21,7 +21,7 @@ Finance &Finance::operator+=(const Finance &rhs) {
 }
 ostream &operator<<(ostream &lhs, const Finance &rhs) {
   lhs << std::fixed << std::setprecision(2)
-      << "+ " << rhs.income << " - " << rhs.expense << '\n';
+      << "+ " << rhs.income << " - " << rhs.expense;
   return lhs;
 }
 

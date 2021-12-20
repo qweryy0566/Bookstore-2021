@@ -9,7 +9,7 @@ const int kBookIsbn = 20, kBookKeyword = 60, kBookName = 60;
 // BookName 和 BookAuthor 共用判断函数和最大长度。
 
 bool IsBookIsbn(const string &);
-bool IsBookName(const string &);  // author 和单个 keyword 规则相同
+bool IsBookName(const string &);  // author 规则相同
 bool IsBookAuthor(const string &);
 bool IsBookKeyword(const string &);  // 单个 keyword
 bool IsBookCount(const string &);

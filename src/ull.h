@@ -57,7 +57,7 @@ class BlockIndex {
   friend class BlockList;
 
  private:
-  int cnt = 1, offset[kBlockCnt] = {0};
+  int cnt = 1, offset[kBlockCnt] = {4};
   Node back[kBlockCnt];
 
  public:

@@ -6,6 +6,9 @@
 #include "user.h"
 #include "utils.h"
 
+const string kIsbnStr = "-ISBN", kNameStr = "-name", kAuthorStr = "-author",
+             kKeywordStr = "-keyword", kPriceStr = "-price";
+
 class BookStore {
  private:
   UserManager user_manager;
@@ -31,7 +34,6 @@ class BookStore {
   void VisitImport(vector<string> &);
 
   void VisitShowFinance(vector<string> &);
-
 };
 
 #endif  // BOOKSTORE_COMMANDS_H_

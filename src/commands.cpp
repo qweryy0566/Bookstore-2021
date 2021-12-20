@@ -104,19 +104,29 @@ void BookStore::VisitShow(vector<string> &argv) {
       break;
     case 2: {
       pair<string, string> param;
+      string &str = param.second;
       if (!SpiltString(argv[1], param)) throw Exception();
-      if (param.first == "=ISBN") {
-        if (!IsBookIsbn(param.second)) throw Exception();
-        book_manager.ShowIsbn(param.second);
-      } else if (param.first == "=name") {
-        if (!IsBookName(param.second)) throw Exception();
-        book_manager.ShowName(param.second);
-      } else if (param.first == "=author") {
-        if (!IsBookAuthor(param.second)) throw Exception();
-        book_manager.ShowAuthor(param.second);
-      } else if (param.first == "=keyword") {
-        if (!IsBookKeyword(param.second)) throw Exception();
-        book_manager.ShowKeyword(param.second);
+      if (param.first == kIsbnStr) {
+        if (!IsBookIsbn(str)) throw Exception();
+        book_manager.ShowIsbn(str);
+      } else if (param.first == kNameStr) {
+        if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
+          throw Exception();
+        str = str.substr(1), str.pop_back();
+        if (!IsBookName(str)) throw Exception();
+        book_manager.ShowName(str);
+      } else if (param.first == kAuthorStr) {
+        if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
+          throw Exception();
+        str = str.substr(1), str.pop_back();
+        if (!IsBookAuthor(str)) throw Exception();
+        book_manager.ShowAuthor(str);
+      } else if (param.first == kKeywordStr) {
+        if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
+          throw Exception();
+        str = str.substr(1), str.pop_back();
+        if (!IsBookKeyword(str)) throw Exception();
+        book_manager.ShowKeyword(str);
       } else {
         throw Exception();
       }
@@ -165,26 +175,26 @@ void BookStore::VisitModify(vector<string> &argv) {
     if (!SpiltString(argv[i], param[i])) throw Exception();
     if (vis.find(param[i].first) != vis.end()) throw Exception();
     string &str = param[i].second;
-    if (param[i].first == "-ISBN") {  // 注意判断没有重复。
+    if (param[i].first == kIsbnStr) {  // 注意判断没有重复。
       if (!IsBookIsbn(str) || book_manager.Find(str)) throw Exception();
-    } else if (param[i].first == "-name") {
+    } else if (param[i].first == kNameStr) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
-      str.substr(1), str.pop_back();
+      str = str.substr(1), str.pop_back();
       if (!IsBookName(str)) throw Exception();
-    } else if (param[i].first == "-author") {
+    } else if (param[i].first == kAuthorStr) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
-      str.substr(1), str.pop_back();
+      str = str.substr(1), str.pop_back();
       if (!IsBookAuthor(str)) throw Exception();
-    } else if (param[i].first == "-keyword") {
+    } else if (param[i].first == kKeywordStr) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
-      str.substr(1), str.pop_back();
+      str = str.substr(1), str.pop_back();
       SpiltString(str, keywords, '|');
       for (auto it : keywords)
         if (!IsBookKeyword(it)) throw Exception();
-    } else if (param[i].first == "-price") {
+    } else if (param[i].first == kPriceStr) {
       if (!IsBookPrice(str)) throw Exception();
     } else {
       throw Exception();

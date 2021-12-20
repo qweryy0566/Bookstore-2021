@@ -113,8 +113,12 @@ bool BlockList::Add(const Node &obj) {
 }
 
 void BlockList::DeleteBlock(BlockIndex &index, const int &pos) {
-  blocks.Delete(index.offset[pos]), --index.cnt;
-  for (int i = pos; i < index.cnt; ++i) index.Move(i, 1);
+  if (index.cnt > 1) {
+    blocks.Delete(index.offset[pos]), --index.cnt;
+    for (int i = pos; i < index.cnt; ++i) index.Move(i, 1);
+  } else {
+    blocks.Update(Block(), index.offset[pos]);
+  }
 }
 
 bool BlockList::Del(const Node &obj) {
