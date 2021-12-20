@@ -50,7 +50,7 @@ class Block {
   bool Del(const Node &);
   Block Split(const int &);
   Block &Merge(const Block &);
-  void Query(const string &, vector<string> &) const;
+  void Query(const string &, vector<int> &) const;
 };
 
 class BlockIndex {
@@ -80,7 +80,7 @@ class BlockList {
   // 检查块链中是否有 obj，有的话返回在文件中的位置，没有则返回
   // 0（没有数据存在开头）。
   int Find(const Node &);
-  bool Query(const string &, vector<string> &);
+  bool Query(const string &, vector<int> &);
 };
 
 #endif  // BOOKSTORE_ULL_H_

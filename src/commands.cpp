@@ -26,15 +26,16 @@ void BookStore::Interprete(string &command) {
   } else if (argv[0] == "delete") {
     VisitDelete(argv);
   } else if (argv[0] == "show") {  // 包含了图书的 show 和日志的 show finance.
-
+    argv.size() > 1 && argv[1] == "finance" ? VisitShowFinance(argv)
+                                            : VisitShow(argv);
   } else if (argv[0] == "buy") {
-
+    VisitBuy(argv);
   } else if (argv[0] == "select") {
     VisitSelect(argv);
   } else if (argv[0] == "modify") {
     VisitModify(argv);
   } else if (argv[0] == "import") {
-
+    VisitImport(argv);
   } else if (argv[0] == "report") {
 
   } else if (argv[0] == "log") {
@@ -44,7 +45,7 @@ void BookStore::Interprete(string &command) {
   }
 }
 
-// su [User-ID] ([Password])?
+// {0} su [User-ID] ([Password])?
 void BookStore::VisitSu(vector<string> &argv) {
   switch (argv.size()) {
     case 2: user_manager.Login(argv[1], ""); break;
@@ -53,20 +54,22 @@ void BookStore::VisitSu(vector<string> &argv) {
   }
 }
 
-// logout
+// {1} logout
 void BookStore::VisitLogout(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 1) throw Exception();
   if (argv.size() != 1) throw Exception();
   user_manager.Logout();
 }
 
-// register [User-ID] [Password] [User-Name]
+// {0} register [User-ID] [Password] [User-Name]
 void BookStore::VisitRegister(vector<string> &argv) {
   if (argv.size() != 4) throw Exception();
   user_manager.Register(argv[1], argv[2], argv[3]);
 }
 
-// passwd [User-ID] ([Old-Password])? [New-Password]
+// {1} passwd [User-ID] ([Old-Password])? [New-Password]
 void BookStore::VisitPasswd(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 1) throw Exception();
   switch (argv.size()) {
     case 3: user_manager.Passwd(argv[1], "", argv[2]); break;
     case 4: user_manager.Passwd(argv[1], argv[2], argv[3]); break;
@@ -74,20 +77,70 @@ void BookStore::VisitPasswd(vector<string> &argv) {
   }
 }
 
-// useradd [User-ID] [Password] [Priority] [User-Name]
+// {3} useradd [User-ID] [Password] [Priority] [User-Name]
 void BookStore::VisitUseradd(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 3) throw Exception();
   if (argv.size() != 5) throw Exception();
   user_manager.AddUser(argv[1], argv[2], argv[3], argv[4]);
 }
 
-// delete [User-ID]
+// {7} delete [User-ID]
 void BookStore::VisitDelete(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 7) throw Exception();
   if (argv.size() != 2) throw Exception();
   user_manager.DeleteUser(argv[1]);
 }
 
-// select [ISBN]
+// {3} show (-ISBN=[ISBN] | -name="[Book-Name]" | -author="[Author]" |
+// -keyword="[Keyword]")?
+void BookStore::VisitShow(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 3) throw Exception();
+  switch (argv.size()) {
+    case 1:
+      book_manager.ShowIsbn();
+      break;
+    case 2: {
+      pair<string, string> param;
+      if (!SpiltString(argv[1], param)) throw Exception();
+      if (param.first == "=ISBN") {
+        if (!IsBookIsbn(param.second)) throw Exception();
+        book_manager.ShowIsbn(param.second);
+      } else if (param.first == "=name") {
+        if (!IsBookName(param.second)) throw Exception();
+        book_manager.ShowName(param.second);
+      } else if (param.first == "=author") {
+        if (!IsBookAuthor(param.second)) throw Exception();
+        book_manager.ShowAuthor(param.second);
+      } else if (param.first == "=keyword") {
+        if (!IsBookKeyword(param.second)) throw Exception();
+        book_manager.ShowKeyword(param.second);
+      } else {
+        throw Exception();
+      }
+      break;
+    }
+    default:
+      throw Exception();
+  }
+  cout.put('\n');
+}
+
+// {1} buy [ISBN] [Quantity]
+void BookStore::VisitBuy(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 1) throw Exception();
+  if (argv.size() != 3) throw Exception();
+  // 判断参数的合法性。
+  if (!IsBookIsbn(argv[1]) || !IsBookCount(argv[2])) throw Exception();
+  int index = book_manager.Find(argv[1]);
+  if (!index) throw Exception();
+  cout << std::fixed << std::setprecision(2)
+       << book_manager.BuyBook(index, std::stoi(argv[2])) << '\n';
+  
+}
+
+// {3} select [ISBN]
 void BookStore::VisitSelect(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 3) throw Exception();
   if (argv.size() != 2) throw Exception();
   SelectBook(argv[1]);
 }
@@ -95,9 +148,10 @@ void BookStore::SelectBook(const string &isbn) {
   user_manager.SelectBook(book_manager.Select(isbn));
 }
 
-// modify (-ISBN=[ISBN] | -name="[Book-Name]" | -author="[Author]" |
+// {3} modify (-ISBN=[ISBN] | -name="[Book-Name]" | -author="[Author]" |
 // -keyword="[Keyword]" | -price=[Price])+
 void BookStore::VisitModify(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 3) throw Exception();
   int index = user_manager.GetBookOffset();
   if (argv.size() == 1 || !index) throw Exception();
   // 第一遍：检查是否有重复或非法的附加参数
@@ -105,8 +159,7 @@ void BookStore::VisitModify(vector<string> &argv) {
   pair<string, string> param[argv.size()];
   vector<string> keywords;  // 存储分隔开来的 keyword.
   for (int i = 1; i < argv.size(); ++i) {
-    int pos = argv[i].find('=');
-    param[i] = std::make_pair(argv[i].substr(0, pos), argv[i].substr(pos + 1));
+    if (!SpiltString(argv[i], param[i])) throw Exception();
     if (vis.find(param[i].first) != vis.end()) throw Exception();
     string &str = param[i].second;
     if (param[i].first == "-ISBN") {  // 注意判断没有重复。
@@ -148,4 +201,21 @@ void BookStore::VisitModify(vector<string> &argv) {
     } else if (param[i].first == "-price") {
       book_manager.ModifyPrice(index, param[i].second);
     }
+}
+
+// {3} import [Quantity] [Total-Cost]
+void BookStore::VisitImport(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 3) throw Exception();
+  if (argv.size() != 3) throw Exception();
+  if (!IsBookCount(argv[1]) || !IsBookPrice(argv[2])) throw Exception();
+  int index = user_manager.GetBookOffset();
+  if (!index) throw Exception();
+  book_manager.AddBook(index, std::stoi(argv[1]));
+
+}
+
+// {7} show finance ([Time])?
+void BookStore::VisitShowFinance(vector<string> &argv) {
+  if (user_manager.GetPrivilege() < 7) throw Exception();
+
 }

@@ -18,5 +18,6 @@ using std::string;
 using std::vector;
 
 void SpiltString(const string &, vector<string> &, char c = ' ');
+bool SpiltString(const string &, pair<string, string> &, char c = '=');
 
 #endif  // BOOKSTORE_UTILS_H_

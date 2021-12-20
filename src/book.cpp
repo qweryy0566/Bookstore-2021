@@ -15,8 +15,12 @@ bool IsBookName(const string &s) {
 bool IsBookAuthor(const string &s) {
   return IsBookName(s);
 }
+// 判断是否为单个关键词。
 bool IsBookKeyword(const string &s) {
-  return IsBookName(s);
+  if (s.empty() || s.length() > kBookKeyword) return 0;
+  for (auto c : s)
+    if (!isprint(c) || c == '\"' || c == '|') return 0;
+  return 1;
 }
 bool IsBookCount(const string &s) {
   if (s.empty() || s.length() > 10) return 0;
@@ -36,6 +40,13 @@ bool IsBookPrice(const string &s) {
 }
 
 // .......... class Book ..........
+
+ostream &operator<<(ostream &lhs, const Book &rhs) {
+  lhs << rhs.isbn << '\t' << rhs.name << '\t' << rhs.author << '\t'
+      << rhs.keywords << '\t' << std::fixed << std::setprecision(2) << rhs.price
+      << '\t' << rhs.count << '\n';
+  return lhs;
+}
 
 Book::Book() = default;
 Book::Book(const string &isbn_, const int count_, const double price_,
@@ -75,6 +86,11 @@ void Book::ChangeKeywords(const string &str) {
 }
 void Book::ChangePrice(const double &num) {
   price = num;
+}
+// 减掉 quantity 的量而不是直接赋值。
+void Book::AddCount(const int &quantity) {
+  if (count + quantity < 0) throw Exception();
+  count += quantity;
 }
 
 // .......... class BookManager ..........
@@ -143,4 +159,49 @@ void BookManager::ModifyPrice(const int &index, const string &str) {
   books.Read(tmp, index);
   tmp.ChangePrice(std::stod(str));
   books.Update(tmp, index);
+}
+// 买 str 对应的 int 的量的书，返回价格。
+double BookManager::BuyBook(const int &index, const int &quantity) {
+  Book tmp;
+  books.Read(tmp, index);
+  tmp.AddCount(-quantity);  // 注意负号。
+  books.Update(tmp, index);
+  return tmp.Price() * quantity;
+}
+void BookManager::AddBook(const int &index, const int &quantity) {
+  Book tmp;
+  books.Read(tmp, index);
+  tmp.AddCount(quantity);
+  books.Update(tmp, index);
+}
+
+void BookManager::PrintIndex(const vector<int> &index) {
+  if (index.empty())
+    cout << '\n';
+  else
+    for (auto it : index) {
+      Book tmp;
+      books.Read(tmp, it);
+      cout << tmp << '\n';
+    }
+}
+void BookManager::ShowIsbn(const string &str) {
+  vector<int> index;
+  isbn_list.Query(str, index);
+  PrintIndex(index);
+} 
+void BookManager::ShowName(const string &str) {
+  vector<int> index;
+  name_list.Query(str, index);
+  PrintIndex(index);
+}
+void BookManager::ShowAuthor(const string &str) {
+  vector<int> index;
+  author_list.Query(str, index);
+  PrintIndex(index);
+}
+void BookManager::ShowKeyword(const string &str) {
+  vector<int> index;
+  keyword_list.Query(str, index);
+  PrintIndex(index);
 }

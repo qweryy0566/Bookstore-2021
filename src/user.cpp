@@ -80,13 +80,12 @@ void UserManager::Login(const string &id, const string &password) {
   stack.push_back(tmp);
   ++login_id[id];
 }
-// {1}
+
 void UserManager::Logout() {
-  if (CurrentUser().privilege < 1) throw Exception();
   --login_id[CurrentUser().id];
   stack.pop_back();
 }
-// {0}
+
 void UserManager::Register(const string &id, const string &password,
                            const string &name) {
   User tmp(id, password, name);
@@ -94,10 +93,9 @@ void UserManager::Register(const string &id, const string &password,
   int index = users.Write(tmp);
   list.Add(Node(id, "", index));
 }
-// {1}
+
 void UserManager::Passwd(const string &id, const string &old_password,
                          const string &new_password) {
-  if (CurrentUser().privilege < 1) throw Exception();
   User tmp(id, old_password);
   int index = list.Find(Node(id));
   if (!index) throw Exception();
@@ -111,10 +109,9 @@ void UserManager::Passwd(const string &id, const string &old_password,
   // 由于 id 没变，不需要修改块链内信息。
   users.Update(tmp, index);
 }
-// {3}
+
 void UserManager::AddUser(const string &id, const string &password,
                           const string &privilege, const string &name) {
-  if (CurrentUser().privilege < 3) throw Exception();
   if (!IsUserPrivilege(privilege)) throw Exception();
   User tmp(id, password, name, (Privilege)std::stoi(privilege));
   if (tmp.privilege >= CurrentUser().privilege || list.Find(Node(id)))
@@ -122,9 +119,8 @@ void UserManager::AddUser(const string &id, const string &password,
   int index = users.Write(tmp);
   list.Add(Node(id, "", index));
 }
-// {7}
+
 void UserManager::DeleteUser(const string &id) {
-  if (CurrentUser().privilege < 7) throw Exception();
   User tmp(id);
   int index = list.Find(Node(id));
   if (!index || login_id[id]) throw Exception();
@@ -137,4 +133,7 @@ const int &UserManager::GetBookOffset() const {
 }
 void UserManager::SelectBook(const int &new_book_offset) {
   stack.back().book_offset = new_book_offset;
+}
+const Privilege &UserManager::GetPrivilege() const {
+  return CurrentUser().privilege;
 }

@@ -57,6 +57,7 @@ class UserManager {
   void DeleteUser(const string &);
   const int &GetBookOffset() const;
   void SelectBook(const int &);
+  const Privilege &GetPrivilege() const;
 };
 
 #endif  // BOOKSTORE_USER_H_

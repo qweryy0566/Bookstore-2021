@@ -4,9 +4,7 @@
 #include "ull.h"
 #include "user.h"
 #include "utils.h"
-using std::string;
-using std::unordered_map;
-using std::vector;
+using std::ostream;
 
 const int kBookIsbn = 20, kBookKeyword = 60, kBookName = 60;
 // BookName 和 BookAuthor 共用判断函数和最大长度。
@@ -19,6 +17,8 @@ bool IsBookCount(const string &);
 bool IsBookPrice(const string &);
 
 class Book {
+  friend ostream &operator<<(ostream &, const Book &);
+
  private:
   char isbn[kBookIsbn + 1] = "", keywords[kBookKeyword + 1] = "";
   char name[kBookName + 1] = "", author[kBookName + 1] = "";
@@ -40,12 +40,15 @@ class Book {
   void ChangeAuthor(const string &);
   void ChangeKeywords(const string &);
   void ChangePrice(const double &);
+  void AddCount(const int &);
 };
 
 class BookManager {
  private:
   MemoryRiver<Book> books;
   BlockList isbn_list, name_list, author_list, keyword_list;
+
+  void PrintIndex(const vector<int> &);
 
  public:
   void Init(const string &);
@@ -56,6 +59,12 @@ class BookManager {
   void ModifyAuthor(const int &, const string &);
   void ModifyKeywords(const int &, const string &, const vector<string> &);
   void ModifyPrice(const int &, const string &);
+  double BuyBook(const int &, const int &);
+  void AddBook(const int &, const int &);
+  void ShowIsbn(const string &str = "");
+  void ShowName(const string &);
+  void ShowAuthor(const string &);
+  void ShowKeyword(const string &);
 };
 
 #endif  // BOOKSTORE_BOOK_H_

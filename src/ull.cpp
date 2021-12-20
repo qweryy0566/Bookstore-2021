@@ -69,9 +69,11 @@ Block &Block::Merge(const Block &obj) {
   siz += obj.siz;
   return *this;
 }
-void Block::Query(const string &key, vector<string> &ans) const {
+void Block::Query(const string &key, vector<int> &ans) const {
   for (int i = 0; i < siz; ++i)
-    if (key == array[i].Key()) ans.push_back(array[i].Value());
+    if (key.empty() || key == array[i].Key())  // 空串匹配所有
+      ans.push_back(array[i].Offset());
+  // 返回 offset.
 }
 
 // .......... class BlockIndex ..........
@@ -149,7 +151,8 @@ int BlockList::Find(const Node &obj) {
   return tmp.Find(obj);
 }
 
-bool BlockList::Query(const string &key, vector<string> &ans) {
+// 查询 key 的节点，返回 offset 数组。特别地，空串匹配所有元素。
+bool BlockList::Query(const string &key, vector<int> &ans) {
   BlockIndex index;
   blocks_index.Read(index);
   Block tmp;
@@ -157,7 +160,7 @@ bool BlockList::Query(const string &key, vector<string> &ans) {
     if (key <= index.back[i].Key()) {
       blocks.Read(tmp, index.offset[i]);
       tmp.Query(key, ans);
-      if (key < index.back[i].Key()) break;
+      if (!key.empty() && key < index.back[i].Key()) break;
     }
   return ans.size();
 }
