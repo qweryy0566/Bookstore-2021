@@ -4,7 +4,6 @@
 #include "ull.h"
 #include "user.h"
 #include "utils.h"
-using std::ostream;
 
 const int kBookIsbn = 20, kBookKeyword = 60, kBookName = 60;
 // BookName 和 BookAuthor 共用判断函数和最大长度。

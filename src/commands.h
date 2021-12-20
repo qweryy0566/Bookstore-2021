@@ -10,6 +10,7 @@ class BookStore {
  private:
   UserManager user_manager;
   BookManager book_manager;
+  LogManager log_manager;
 
   void SelectBook(const string &);
 

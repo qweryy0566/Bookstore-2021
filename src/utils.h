@@ -13,6 +13,7 @@
 using std::cin;
 using std::cout;
 using std::pair;
+using std::ostream;
 using std::unordered_map;
 using std::string;
 using std::vector;

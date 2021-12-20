@@ -7,6 +7,7 @@ void BookStore::Init() {
     std::filesystem::create_directory("data");
   user_manager.Init("data/users");
   book_manager.Init("data/books");
+  log_manager.Init("data/");
 }
 
 void BookStore::Interprete(string &command) {
@@ -37,9 +38,11 @@ void BookStore::Interprete(string &command) {
   } else if (argv[0] == "import") {
     VisitImport(argv);
   } else if (argv[0] == "report") {
-
+    // TODO : {3} report myself
+    // TODO : {7} report finance
+    // TODO : {7} report employee
   } else if (argv[0] == "log") {
-
+    // TODO : {7} log
   } else {
     throw Exception();
   }
@@ -122,7 +125,6 @@ void BookStore::VisitShow(vector<string> &argv) {
     default:
       throw Exception();
   }
-  cout.put('\n');
 }
 
 // {1} buy [ISBN] [Quantity]
@@ -133,9 +135,10 @@ void BookStore::VisitBuy(vector<string> &argv) {
   if (!IsBookIsbn(argv[1]) || !IsBookCount(argv[2])) throw Exception();
   int index = book_manager.Find(argv[1]);
   if (!index) throw Exception();
-  cout << std::fixed << std::setprecision(2)
-       << book_manager.BuyBook(index, std::stoi(argv[2])) << '\n';
-  
+  double income = book_manager.BuyBook(index, std::stoi(argv[2]));
+  cout << std::fixed << std::setprecision(2) << income << '\n';
+  // buy 对书店来说是收入。
+  log_manager.AddSpend(+income);
 }
 
 // {3} select [ISBN]
@@ -211,11 +214,16 @@ void BookStore::VisitImport(vector<string> &argv) {
   int index = user_manager.GetBookOffset();
   if (!index) throw Exception();
   book_manager.AddBook(index, std::stoi(argv[1]));
-
+  // import 对书店来说是支出。
+  log_manager.AddSpend(-std::stod(argv[2]));
 }
 
 // {7} show finance ([Time])?
 void BookStore::VisitShowFinance(vector<string> &argv) {
   if (user_manager.GetPrivilege() < 7) throw Exception();
-
+  switch (argv.size()) {
+    case 2: log_manager.ShowFinance(); break;
+    case 3: log_manager.ShowFinance(argv[2]); break;
+    default: throw Exception();
+  }
 }

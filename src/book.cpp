@@ -177,7 +177,7 @@ void BookManager::AddBook(const int &index, const int &quantity) {
 
 void BookManager::PrintIndex(const vector<int> &index) {
   if (index.empty())
-    cout << '\n';
+    cout.put('\n');
   else
     for (auto it : index) {
       Book tmp;

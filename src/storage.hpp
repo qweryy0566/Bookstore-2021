@@ -42,11 +42,11 @@ class MemoryRiver {
   }
 
   // 写入文件开头第 n 个信息
-  void WriteInfo(int &t, const int &n = 1) {
+  void WriteInfo(const int &t, const int &n = 1) {
     if (n > info_len) return;
     file.open(file_name);
     file.seekp(n << 2);  // 注意最开头有 del_head
-    file.write(reinterpret_cast<char *>(&t), 4);
+    file.write(reinterpret_cast<const char *>(&t), 4);
     file.close();
   }
 
