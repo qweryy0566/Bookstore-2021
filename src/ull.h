@@ -15,7 +15,7 @@ const int kBlockLen = 1500, kBlockCnt = 1500;
 
 class Node {
  private:
-  int offset = 0;
+  int offset = 0;  // 可以根据该地址找到原始数据。
   char key[kMaxLen] = "", value[kMaxLen] = "";
 
  public:
