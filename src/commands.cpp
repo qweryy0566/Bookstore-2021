@@ -163,6 +163,7 @@ void BookStore::VisitSelect(vector<string> &argv) {
   SelectBook(argv[1]);
 }
 void BookStore::SelectBook(const string &isbn) {
+  if (!IsBookIsbn(isbn)) throw Exception();  // 记得判断是否合法。
   user_manager.SelectBook(book_manager.Select(isbn));
 }
 
@@ -170,7 +171,7 @@ void BookStore::SelectBook(const string &isbn) {
 // -keyword="[Keyword]" | -price=[Price])+
 void BookStore::VisitModify(vector<string> &argv) {
   if (user_manager.GetPrivilege() < 3) throw Exception();
-  int index = user_manager.GetBookOffset();
+  int index = user_manager.GetBookOffset();  // 未选中图书时 offset 为 0.
   if (argv.size() == 1 || !index) throw Exception();
   // 第一遍：检查是否有重复或非法的附加参数
   unordered_map<string, bool> vis;

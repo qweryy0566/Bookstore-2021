@@ -80,6 +80,7 @@ void UserManager::Login(const string &id, const string &password) {
   ++login_id[id];
 }
 
+// 没有特别判断是否有登录账户，因为栈中有一个 0 权的虚账户，不能 logout.
 void UserManager::Logout() {
   --login_id[CurrentUser().id];
   stack.pop_back();
@@ -105,6 +106,7 @@ void UserManager::Passwd(const string &id, const string &old_password,
     throw Exception();
   }
   tmp.ChangePassword(new_password);
+  // 该函数内判断了 new_password 的合法性。
   // 由于 id 没变，不需要修改块链内信息。
   users.Update(tmp, index);
 }
@@ -114,7 +116,7 @@ void UserManager::AddUser(const string &id, const string &password,
   if (!IsUserPrivilege(privilege)) throw Exception();
   User tmp(id, password, name, (Privilege)std::stoi(privilege));
   if (tmp.privilege >= CurrentUser().privilege || list.Find(Node(id)))
-    throw Exception();
+    throw Exception();  // 已判断是否重名。
   int index = users.Write(tmp);
   list.Add(Node(id, "", index));
 }

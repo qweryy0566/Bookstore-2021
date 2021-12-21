@@ -43,7 +43,6 @@ int Block::Find(const Node &obj) const {
 // 向该块添加元素。如果块过大，返回 false。
 bool Block::Add(const Node &obj) {
   int pos = std::lower_bound(array, array + siz, obj) - array;
-  if (array[pos] == obj) throw Exception();  // 注意此处有异常抛出。
   ++siz;
   for (int i = siz - 1; i > pos; --i) array[i] = array[i - 1];
   array[pos] = obj;
@@ -53,7 +52,6 @@ bool Block::Add(const Node &obj) {
 // 删除该块的元素。如果没有该元素，返回 false。
 void Block::Del(const Node &obj) {
   int pos = std::lower_bound(array, array + siz, obj) - array;
-  if (array[pos] != obj) throw Exception();  // 注意此处有异常抛出。
   for (--siz; pos < siz; ++pos) array[pos] = array[pos + 1];
   array[siz] = Node();
 }
