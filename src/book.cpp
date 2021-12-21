@@ -26,7 +26,7 @@ bool IsBookCount(const string &s) {
   if (s.empty() || s.length() > 10) return 0;
   for (auto c : s)
     if (!isdigit(c)) return 0;
-  return 1;
+  return std::stoll(s) < 1ll << 31;
 }
 bool IsBookPrice(const string &s) {
   if (s.empty() || s.length() > 13) return 0;

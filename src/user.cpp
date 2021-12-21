@@ -66,7 +66,6 @@ void UserManager::Init(const string &file) {
   stack.push_back(User("", "", "", kGuest));
 }
 
-// {0}
 void UserManager::Login(const string &id, const string &password) {
   User tmp(id, password);
   int index = list.Find(Node(id));

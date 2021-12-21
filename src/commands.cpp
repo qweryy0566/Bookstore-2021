@@ -10,11 +10,15 @@ void BookStore::Init() {
   log_manager.Init("data/");
 }
 
-void BookStore::Interprete(string &command) {
+// 返回是否需要退出系统。
+bool BookStore::Interprete(string &command) {
   vector<string> argv;
   SpiltString(command, argv);
-  if (argv.empty()) return;
-  if (argv[0] == "su") {
+  if (argv.empty()) return 0;
+  if (argv[0] == "quit" || argv[0] == "exit") {
+    if (argv.size() != 1) throw Exception();
+    return 1;
+  } else if (argv[0] == "su") {
     VisitSu(argv);
   } else if (argv[0] == "logout") {
     VisitLogout(argv);
@@ -46,6 +50,7 @@ void BookStore::Interprete(string &command) {
   } else {
     throw Exception();
   }
+  return 0;  // 正常返回。
 }
 
 // {0} su [User-ID] ([Password])?

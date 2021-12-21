@@ -7,10 +7,9 @@ int main() {
   // std::cin.tie(0), std::cout.tie(0);
   std::string input;
   bookstore.Init();
-  while (std::getline(cin, input),
-         !cin.eof() && input != "exit" && input != "quit")
+  while (std::getline(cin, input))
     try {
-      bookstore.Interprete(input);
+      if (bookstore.Interprete(input)) break;
     } catch (Exception) {
       cout << "Invalid\n";
     }

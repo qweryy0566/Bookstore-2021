@@ -19,7 +19,7 @@ class BookStore {
 
  public:
   void Init();
-  void Interprete(string &);
+  bool Interprete(string &);
 
   void VisitSu(vector<string> &);
   void VisitLogout(vector<string> &);

@@ -4,7 +4,7 @@ bool IsTime(const string &s) {
   if (s.length() > 10) return 0;
   for (auto c : s)
     if (!isdigit(c)) return 0;
-  return 1;
+  return s.empty() || std::stoll(s) < 1ll << 31;
 }
 
 // .......... class Finance ..........

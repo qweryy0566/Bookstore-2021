@@ -46,8 +46,8 @@ class Block {
   int Find(const Node &) const;
   // 向该块添加元素。如果块过大，返回 false。
   bool Add(const Node &);
-  // 删除该块的元素。如果没有该元素，返回 false。
-  bool Del(const Node &);
+  // 删除该块的元素。
+  void Del(const Node &);
   Block Split(const int &);
   Block &Merge(const Block &);
   void Query(const string &, vector<int> &) const;

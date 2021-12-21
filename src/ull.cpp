@@ -43,7 +43,7 @@ int Block::Find(const Node &obj) const {
 // 向该块添加元素。如果块过大，返回 false。
 bool Block::Add(const Node &obj) {
   int pos = std::lower_bound(array, array + siz, obj) - array;
-  if (array[pos] == obj) throw Exception();
+  if (array[pos] == obj) throw Exception();  // 注意此处有异常抛出。
   ++siz;
   for (int i = siz - 1; i > pos; --i) array[i] = array[i - 1];
   array[pos] = obj;
@@ -51,12 +51,11 @@ bool Block::Add(const Node &obj) {
 }
 
 // 删除该块的元素。如果没有该元素，返回 false。
-bool Block::Del(const Node &obj) {
+void Block::Del(const Node &obj) {
   int pos = std::lower_bound(array, array + siz, obj) - array;
-  if (array[pos] != obj) throw Exception();
+  if (array[pos] != obj) throw Exception();  // 注意此处有异常抛出。
   for (--siz; pos < siz; ++pos) array[pos] = array[pos + 1];
   array[siz] = Node();
-  return 1;
 }
 
 Block Block::Split(const int &new_block_siz = kBlockLen) {
@@ -113,7 +112,7 @@ bool BlockList::Add(const Node &obj) {
 }
 
 void BlockList::DeleteBlock(BlockIndex &index, const int &pos) {
-  if (pos) {
+  if (index.cnt > 1) {
     blocks.Delete(index.offset[pos]), --index.cnt;
     for (int i = pos; i < index.cnt; ++i) index.Move(i, 1);
   } else {
@@ -128,7 +127,7 @@ bool BlockList::Del(const Node &obj) {
   Block tmp;
   int pos = index.FindPosition(obj);
   blocks.Read(tmp, index.offset[pos]);
-  if (!tmp.Del(obj)) return 0;
+  tmp.Del(obj);
   if (pos + 1 < index.cnt) {
     Block nxt_block;
     blocks.Read(nxt_block, index.offset[pos + 1]);
