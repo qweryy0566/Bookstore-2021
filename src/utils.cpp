@@ -2,7 +2,7 @@
 
 void SpiltString(const string &str, vector<string> &argv, char c) {
   argv.clear();
-  if (str.empty()) return;
+  if (c == ' ' && str.empty()) return;
   string::size_type last_pos = 0, pos;
   do {
     pos = str.find(c, last_pos);

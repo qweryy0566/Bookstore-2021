@@ -118,12 +118,23 @@ int BookManager::Find(const string &isbn) {
   return isbn_list.Find(Node(isbn));
 }
 
+// 注意：修改 ISBN 时会改变所有列表的信息。
 void BookManager::ModifyIsbn(const int &index, const string &str) {
   Book tmp;
   books.Read(tmp, index);
+  vector<string> keywords;
+  SpiltString(tmp.Keywords(), keywords, '|');
   isbn_list.Del(Node(tmp.Isbn()));
+  name_list.Del(Node(tmp.Name(), tmp.Isbn()));
+  author_list.Del(Node(tmp.Author(), tmp.Isbn()));
+  for (auto it : keywords)
+    keyword_list.Del(Node(it, tmp.Isbn()));
   tmp.ChangeIsbn(str);
   isbn_list.Add(Node(tmp.Isbn(), "", index));
+  name_list.Add(Node(tmp.Name(), tmp.Isbn(), index));
+  author_list.Add(Node(tmp.Author(), tmp.Isbn(), index));
+  for (auto it : keywords)
+    keyword_list.Add(Node(it, tmp.Isbn(), index));
   books.Update(tmp, index);
 }
 void BookManager::ModifyName(const int &index, const string &str) {
@@ -148,6 +159,7 @@ void BookManager::ModifyKeywords(const int &index, const string &str,
   books.Read(tmp, index);
   vector<string> old_keywords;
   SpiltString(tmp.Keywords(), old_keywords, '|');
+  // if (tmp.Keywords().empty()) old_keywords.push_back("");
   for (auto it : old_keywords)
     keyword_list.Del(Node(it, tmp.Isbn()));
   tmp.ChangeKeywords(str);

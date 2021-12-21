@@ -94,10 +94,10 @@ void BookStore::VisitDelete(vector<string> &argv) {
   user_manager.DeleteUser(argv[1]);
 }
 
-// {3} show (-ISBN=[ISBN] | -name="[Book-Name]" | -author="[Author]" |
+// {1} show (-ISBN=[ISBN] | -name="[Book-Name]" | -author="[Author]" |
 // -keyword="[Keyword]")?
 void BookStore::VisitShow(vector<string> &argv) {
-  if (user_manager.GetPrivilege() < 3) throw Exception();
+  if (user_manager.GetPrivilege() < 1) throw Exception();
   switch (argv.size()) {
     case 1:
       book_manager.ShowIsbn();

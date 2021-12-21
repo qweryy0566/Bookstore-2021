@@ -11,7 +11,7 @@
 using std::string;
 using std::vector;
 const int kMaxLen = 61;
-const int kBlockLen = 1000, kBlockCnt = 3000;
+const int kBlockLen = 900, kBlockCnt = 3000;
 
 class Node {
  private:
