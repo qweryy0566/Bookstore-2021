@@ -191,9 +191,13 @@ void BookStore::VisitModify(vector<string> &argv) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
       str = str.substr(1), str.pop_back();
+      unordered_map<string, bool> vis_keyword;
       SpiltString(str, keywords, '|');
-      for (auto it : keywords)
-        if (!IsBookKeyword(it)) throw Exception();
+      for (auto it : keywords) {
+        if (!IsBookKeyword(it) || vis_keyword.find(it) != vis_keyword.end())
+          throw Exception();
+        vis_keyword[it] = 1;
+      }
     } else if (param[i].first == kPriceStr) {
       if (!IsBookPrice(str)) throw Exception();
     } else {

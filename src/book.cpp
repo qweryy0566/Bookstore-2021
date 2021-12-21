@@ -159,7 +159,6 @@ void BookManager::ModifyKeywords(const int &index, const string &str,
   books.Read(tmp, index);
   vector<string> old_keywords;
   SpiltString(tmp.Keywords(), old_keywords, '|');
-  // if (tmp.Keywords().empty()) old_keywords.push_back("");
   for (auto it : old_keywords)
     keyword_list.Del(Node(it, tmp.Isbn()));
   tmp.ChangeKeywords(str);
