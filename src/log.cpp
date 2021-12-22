@@ -20,16 +20,14 @@ Finance &Finance::operator+=(const Finance &rhs) {
   return *this;
 }
 ostream &operator<<(ostream &lhs, const Finance &rhs) {
-  lhs << std::fixed << std::setprecision(2)
-      << "+ " << rhs.income << " - " << rhs.expense;
+  lhs << std::fixed << std::setprecision(2) << "+ " << rhs.income << " - "
+      << rhs.expense;
   return lhs;
 }
 
 // .......... class LogManager ..........
 
-void LogManager::Init(const string &dir) {
-  spend.Init(dir + "finance.bin");
-}
+void LogManager::Init(const string &dir) { spend.Init(dir + "finance.bin"); }
 
 const int LogManager::SpendCount() {
   int count;
@@ -46,16 +44,20 @@ void LogManager::AddSpend(const Finance &record) {
 
 void LogManager::ShowFinance(const string &str) {
   if (!IsTime(str)) throw Exception();
-  int total = SpendCount(), need_cnt = str.empty() ? total : std::stoi(str);
-  if (need_cnt > total) throw Exception();
-  Finance ans, tmp;
-  if (need_cnt) {
-    int d = sizeof(Finance) + 4;
-    for (int i = 1; i <= need_cnt; ++i) {
-      spend.Read(tmp, 8 + (total - i) * d);  // 存储地址可计算，需验证。
-      ans += tmp;
+  int total = SpendCount(), need_cnt;
+  if (str.empty()) need_cnt = total;
+  else {
+    need_cnt = std::stoi(str);
+    if (need_cnt > total) throw Exception();
+    if (!need_cnt) {  // 注意和 "show finance" 且 total = 0 情况区分。 
+      cout.put('\n'); return;
     }
-    cout << ans;
   }
-  cout.put('\n');
+  Finance ans, tmp;
+  int d = sizeof(Finance) + 4;
+  for (int i = 1; i <= need_cnt; ++i) {
+    spend.Read(tmp, 8 + (total - i) * d);  // 存储地址可计算，需验证。
+    ans += tmp;
+  }
+  cout << ans << '\n';
 }

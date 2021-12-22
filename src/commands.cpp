@@ -89,6 +89,7 @@ void BookStore::VisitPasswd(vector<string> &argv) {
 void BookStore::VisitUseradd(vector<string> &argv) {
   if (user_manager.GetPrivilege() < 3) throw Exception();
   if (argv.size() != 5) throw Exception();
+  // 禁止添加 0 权账户。
   user_manager.AddUser(argv[1], argv[2], argv[3], argv[4]);
 }
 
