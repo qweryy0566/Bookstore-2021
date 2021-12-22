@@ -115,7 +115,13 @@ int BookManager::Select(const string &isbn) {
   return index;
 }
 
-int BookManager::Find(const string &isbn) {
+// 允许一个特例（当前的书本）。
+int BookManager::Find(const string &isbn, const int &index) {
+  if (index) {
+    Book tmp;
+    books.Read(tmp, index);
+    if (isbn == tmp.Isbn()) return 0;
+  }
   return isbn_list.Find(Node(isbn));
 }
 

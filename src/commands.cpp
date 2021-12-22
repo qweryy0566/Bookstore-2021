@@ -183,7 +183,9 @@ void BookStore::VisitModify(vector<string> &argv) {
     if (vis.find(param[i].first) != vis.end()) throw Exception();
     string &str = param[i].second;
     if (param[i].first == kIsbnStr) {  // 注意判断没有重复。
-      if (!IsBookIsbn(str) || book_manager.Find(str)) throw Exception();
+      if (!IsBookIsbn(str) ||  // 注意判断将 ISBN 改为自己的情况。
+          book_manager.Find(str, user_manager.GetBookOffset()))
+        throw Exception();
     } else if (param[i].first == kNameStr) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();

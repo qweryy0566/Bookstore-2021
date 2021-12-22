@@ -53,7 +53,8 @@ class BookManager {
  public:
   void Init(const string &);
   int Select(const string &);
-  int Find(const string &);  // 查找是否已经存在该 isbn.
+  // 查找是否已经存在该 isbn 且不等于 index 对应的书的 isbn.
+  int Find(const string &, const int &index = 0);
   void ModifyIsbn(const int &, const string &);
   void ModifyName(const int &, const string &);
   void ModifyAuthor(const int &, const string &);

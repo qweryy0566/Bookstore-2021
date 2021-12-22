@@ -9,6 +9,8 @@ int main() {
   bookstore.Init();
   while (std::getline(cin, input))
     try {
+      // 单个指令最大长度为 1024 字节。
+      if (input.length() > 1024) throw Exception();
       if (bookstore.Interprete(input)) break;
     } catch (Exception) {
       cout << "Invalid\n";

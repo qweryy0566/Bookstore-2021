@@ -55,8 +55,9 @@ class UserManager {
   // 注意对外接口传入参数均为 string。
   void AddUser(const string &, const string &, const string &, const string &);
   void DeleteUser(const string &);
-  const int &GetBookOffset() const;
   void SelectBook(const int &);
+  // 以下函数都是返回当前登录的用户的对应信息。
+  const int &GetBookOffset() const;
   const Privilege &GetPrivilege() const;
 };
 
