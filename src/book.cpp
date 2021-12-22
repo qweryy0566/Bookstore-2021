@@ -115,13 +115,7 @@ int BookManager::Select(const string &isbn) {
   return index;
 }
 
-// 允许一个特例（当前的书本）。
-int BookManager::Find(const string &isbn, const int &index) {
-  if (index) {
-    Book tmp;
-    books.Read(tmp, index);
-    if (isbn == tmp.Isbn()) return 0;
-  }
+int BookManager::Find(const string &isbn) {
   return isbn_list.Find(Node(isbn));
 }
 
@@ -225,4 +219,10 @@ void BookManager::ShowKeyword(const string &str) {
   vector<int> index;
   keyword_list.Query(str, index);
   PrintIndex(index);
+}
+
+const Book BookManager::GetBook(const int &index) {
+  Book tmp;
+  books.Read(tmp, index);
+  return tmp;
 }
