@@ -34,7 +34,7 @@ class Book {
   const string Author() const;
   const string Keywords() const;
   const double &Price() const;
-  const int &Count() const;
+  const long long &Count() const;
   void ChangeIsbn(const string &);
   void ChangeName(const string &);
   void ChangeAuthor(const string &);

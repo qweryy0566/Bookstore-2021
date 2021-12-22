@@ -65,7 +65,7 @@ const string Book::Name() const { return name; }
 const string Book::Author() const { return author; }
 const string Book::Keywords() const { return keywords; }
 const double &Book::Price() const { return price; }
-const int &Book::Count() const { return count; }
+const long long &Book::Count() const { return count; }
 
 void Book::ChangeIsbn(const string &str) {
   memset(isbn, 0, sizeof(isbn));
