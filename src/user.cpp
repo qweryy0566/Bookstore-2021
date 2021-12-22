@@ -17,7 +17,7 @@ bool IsUserPassword(const string &s) {
 }
 bool IsUserPrivilege(const string &s) {
   return s.length() == 1 &&
-         (s[0] == '0' || s[0] == '1' || s[0] == '3' || s[0] == '7');
+         (s[0] == '1' || s[0] == '3' || s[0] == '7');
 }
 
 // .......... class User ..........
