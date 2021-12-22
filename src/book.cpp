@@ -65,6 +65,7 @@ const string Book::Name() const { return name; }
 const string Book::Author() const { return author; }
 const string Book::Keywords() const { return keywords; }
 const double &Book::Price() const { return price; }
+const int &Book::Count() const { return count; }
 
 void Book::ChangeIsbn(const string &str) {
   memset(isbn, 0, sizeof(isbn));
@@ -176,6 +177,7 @@ void BookManager::ModifyPrice(const int &index, const string &str) {
 double BookManager::BuyBook(const int &index, const int &quantity) {
   Book tmp;
   books.Read(tmp, index);
+  if (!tmp.Count()) throw Exception();
   tmp.AddCount(-quantity);  // 注意负号。
   books.Update(tmp, index);
   return tmp.Price() * quantity;

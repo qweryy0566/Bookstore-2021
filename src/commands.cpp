@@ -214,15 +214,15 @@ void BookStore::VisitModify(vector<string> &argv) {
   }
   // 第二遍：确保指令合法的情况下依次修改。
   for (int i = 1; i < argv.size(); ++i)
-    if (param[i].first == "-ISBN") {
+    if (param[i].first == kIsbnStr) {
       book_manager.ModifyIsbn(index, param[i].second);
-    } else if (param[i].first == "-name") {
+    } else if (param[i].first == kNameStr) {
       book_manager.ModifyName(index, param[i].second);
-    } else if (param[i].first == "-author") {
+    } else if (param[i].first == kAuthorStr) {
       book_manager.ModifyAuthor(index, param[i].second);
-    } else if (param[i].first == "-keyword") {
+    } else if (param[i].first == kKeywordStr) {
       book_manager.ModifyKeywords(index, param[i].second, keywords);
-    } else if (param[i].first == "-price") {
+    } else if (param[i].first == kPriceStr) {
       book_manager.ModifyPrice(index, param[i].second);
     }
 }
