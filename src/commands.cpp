@@ -201,6 +201,8 @@ void BookStore::VisitModify(vector<string> &argv) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
       str = str.substr(1), str.pop_back();
+      // 多个关键词的最大长度不能大于 60.
+      if (str.length() > kBookKeyword) throw Exception();
       unordered_map<string, bool> vis_keyword;
       SpiltString(str, keywords, '|');
       for (auto it : keywords) {
