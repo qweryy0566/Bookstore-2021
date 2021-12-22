@@ -23,7 +23,7 @@ bool IsBookKeyword(const string &s) {
   return 1;
 }
 bool IsBookCount(const string &s) {
-  if (s.empty() || s.length() > 10) return 0;
+  if (s.length() > 10) return 0;
   for (auto c : s)
     if (!isdigit(c)) return 0;
   return std::stoll(s) < 1ll << 31;
@@ -49,7 +49,7 @@ ostream &operator<<(ostream &lhs, const Book &rhs) {
 }
 
 Book::Book() = default;
-Book::Book(const string &isbn_, const int count_, const double price_,
+Book::Book(const string &isbn_, const long long count_, const double price_,
            const string &keywords_, const string &name_, const string &author_)
     : Book() {
   // 进来之前必须先确定参数的合法性。

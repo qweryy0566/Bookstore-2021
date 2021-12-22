@@ -21,12 +21,12 @@ class Book {
  private:
   char isbn[kBookIsbn + 1] = "", keywords[kBookKeyword + 1] = "";
   char name[kBookName + 1] = "", author[kBookName + 1] = "";
-  int count = 0;
+  long long count = 0;  // 可能有多个 2^31-1 相加。
   double price = 0;
 
  public:
   Book();
-  explicit Book(const string &isbn_, const int count_ = 0,
+  explicit Book(const string &isbn_, const long long count_ = 0,
                 const double price_ = 0, const string &keywords_ = "",
                 const string &name_ = "", const string &author_ = "");
   const string Isbn() const;
