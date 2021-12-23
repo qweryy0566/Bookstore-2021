@@ -57,6 +57,7 @@ bool BookStore::Interprete(string &command) {
   } else {
     throw Exception();
   }
+  log_manager.AddLog(Log(user_manager.GetId(), command));
   return 0;  // 正常返回。
 }
 
@@ -190,11 +191,8 @@ void BookStore::VisitModify(vector<string> &argv) {
     if (vis.find(param[i].first) != vis.end()) throw Exception();
     string &str = param[i].second;
     if (param[i].first == kIsbnStr) {  // 注意判断没有重复。
-      if (!IsBookIsbn(str)) throw Exception();
-      // 注意判断将 ISBN 改为自己的情况。
-      // Book tmp = book_manager.GetBook(user_manager.GetBookOffset());
-      // if (tmp.Isbn() != str && book_manager.Find(str)) throw Exception();
-      if (book_manager.Find(str)) throw Exception();
+      // 注意不允许将 ISBN 改为自己。
+      if (!IsBookIsbn(str) || book_manager.Find(str)) throw Exception();
     } else if (param[i].first == kNameStr) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
@@ -273,7 +271,7 @@ void BookStore::VisitReportMyself(const string &id) {
 // {7} report finance
 void BookStore::VisitReportFinance() {
   if (user_manager.GetPrivilege() < 7) throw Exception();
-  
+  log_manager.ReportFinance();
 }
 
 // {7} report employee

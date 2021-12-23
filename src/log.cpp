@@ -25,9 +25,26 @@ ostream &operator<<(ostream &lhs, const Finance &rhs) {
   return lhs;
 }
 
+// .......... class Log ..........
+
+Log::Log() = default;
+Log::Log(const string &id_, const string &cmd_) : Log() {
+  strcpy(user_id, id_.c_str());
+  strcpy(command, cmd_.c_str());
+}
+
+ostream &operator<<(ostream &lhs, const Log &rhs) {
+  lhs << std::setw(kUserId) << std::setfill(' ') << rhs.user_id << "  "
+      << rhs.command;
+  return lhs;
+}
+
 // .......... class LogManager ..........
 
-void LogManager::Init(const string &dir) { spend.Init(dir + "finance.bin"); }
+void LogManager::Init(const string &dir) {
+  spend.Init(dir + "finance.bin");
+  records.Init(dir + "records.bin");
+}
 
 const int LogManager::SpendCount() {
   int count;
@@ -60,4 +77,21 @@ void LogManager::ShowFinance(const string &str) {
     ans += tmp;
   }
   cout << ans << '\n';
+}
+
+void LogManager::ReportFinance() {
+  Finance ans, tmp;
+  int total = SpendCount(), d = sizeof(Finance) + 4, wide = 0;
+  for (int i = total; i; i /= 10, ++wide);
+  for (int i = 1; i <= total; ++i) {
+    spend.Read(tmp, 8 + (total - i) * d);
+    cout << std::setw(wide) << std::setfill(' ') << i << ": " << tmp << '\n';
+  }
+}
+
+void LogManager::AddLog(const Log &record) {
+  records.Write(record);
+  int count;
+  records.ReadInfo(count);
+  records.WriteInfo(count + 1);
 }
