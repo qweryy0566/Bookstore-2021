@@ -59,6 +59,7 @@ class UserManager {
   // 以下函数都是返回当前登录的用户的对应信息。
   const int &GetBookOffset() const;
   const Privilege &GetPrivilege() const;
+  const string &GetId() const;
 };
 
 #endif  // BOOKSTORE_USER_H_

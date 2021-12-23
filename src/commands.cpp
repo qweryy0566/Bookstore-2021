@@ -42,11 +42,18 @@ bool BookStore::Interprete(string &command) {
   } else if (argv[0] == "import") {
     VisitImport(argv);
   } else if (argv[0] == "report") {
-    // TODO : {3} report myself
-    // TODO : {7} report finance
-    // TODO : {7} report employee
+    if (argv.size() == 1 || argv.size() > 2) throw Exception();
+    if (argv[1] == "myself")
+      VisitReportMyself(user_manager.GetId());
+    else if (argv[1] == "employee")
+      VisitReportEmployee();
+    else if (argv[1] == "finance")
+      VisitReportFinance();
+    else
+      throw Exception();
   } else if (argv[0] == "log") {
-    // TODO : {7} log
+    if (argv.size() > 1) throw Exception();
+    VisitLog();
   } else {
     throw Exception();
   }
@@ -185,9 +192,9 @@ void BookStore::VisitModify(vector<string> &argv) {
     if (param[i].first == kIsbnStr) {  // 注意判断没有重复。
       if (!IsBookIsbn(str)) throw Exception();
       // 注意判断将 ISBN 改为自己的情况。
-      Book tmp = book_manager.GetBook(user_manager.GetBookOffset());
-      if (tmp.Isbn() != str && book_manager.Find(str)) throw Exception();
-      // if (book_manager.Find(str)) throw Exception();
+      // Book tmp = book_manager.GetBook(user_manager.GetBookOffset());
+      // if (tmp.Isbn() != str && book_manager.Find(str)) throw Exception();
+      if (book_manager.Find(str)) throw Exception();
     } else if (param[i].first == kNameStr) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
@@ -253,4 +260,30 @@ void BookStore::VisitShowFinance(vector<string> &argv) {
     case 3: log_manager.ShowFinance(argv[2]); break;
     default: throw Exception();
   }
+}
+
+// 以下指令在进入前已判断参数个数是否合法。
+
+// {3} report myself
+void BookStore::VisitReportMyself(const string &id) {
+  if (user_manager.GetPrivilege() < 3) throw Exception();
+
+}
+
+// {7} report finance
+void BookStore::VisitReportFinance() {
+  if (user_manager.GetPrivilege() < 7) throw Exception();
+  
+}
+
+// {7} report employee
+void BookStore::VisitReportEmployee() {
+  if (user_manager.GetPrivilege() < 7) throw Exception();
+  
+}
+
+// {7} log
+void BookStore::VisitLog() {
+  if (user_manager.GetPrivilege() < 7) throw Exception();
+  
 }

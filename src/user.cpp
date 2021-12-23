@@ -138,3 +138,6 @@ void UserManager::SelectBook(const int &new_book_offset) {
 const Privilege &UserManager::GetPrivilege() const {
   return CurrentUser().privilege;
 }
+const string &UserManager::GetId() const {
+  return CurrentUser().id;
+}

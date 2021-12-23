@@ -32,8 +32,11 @@ class BookStore {
   void VisitSelect(vector<string> &);
   void VisitModify(vector<string> &);
   void VisitImport(vector<string> &);
-
+  void VisitReportMyself(const string &);
   void VisitShowFinance(vector<string> &);
+  void VisitReportEmployee();
+  void VisitReportFinance();
+  void VisitLog();
 };
 
 #endif  // BOOKSTORE_COMMANDS_H_
