@@ -185,9 +185,9 @@ void BookStore::VisitModify(vector<string> &argv) {
     if (param[i].first == kIsbnStr) {  // 注意判断没有重复。
       if (!IsBookIsbn(str)) throw Exception();
       // 注意判断将 ISBN 改为自己的情况。
-      Book tmp = book_manager.GetBook(user_manager.GetBookOffset());
-      if (tmp.Isbn() != str && book_manager.Find(str)) throw Exception();
-      // if (book_manager.Find(str)) throw Exception();
+      // Book tmp = book_manager.GetBook(user_manager.GetBookOffset());
+      // if (tmp.Isbn() != str && book_manager.Find(str)) throw Exception();
+      if (book_manager.Find(str)) throw Exception();
     } else if (param[i].first == kNameStr) {
       if (str.length() <= 2 || str.front() != '\"' || str.back() != '\"')
         throw Exception();
