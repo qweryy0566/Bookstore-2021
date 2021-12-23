@@ -53,6 +53,7 @@ Book::Book(const string &isbn_, const long long count_, const double price_,
            const string &keywords_, const string &name_, const string &author_)
     : Book() {
   // 进来之前必须先确定参数的合法性。
+  if (!IsBookIsbn(isbn_)) throw Exception();
   count = count_, price = price_;
   strcpy(isbn, isbn_.c_str());
   strcpy(keywords, keywords_.c_str());
