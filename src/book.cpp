@@ -177,7 +177,6 @@ void BookManager::ModifyPrice(const int &index, const string &str) {
 double BookManager::BuyBook(const int &index, const int &quantity) {
   Book tmp;
   books.Read(tmp, index);
-  if (!tmp.Count()) throw Exception();
   tmp.AddCount(-quantity);  // 注意负号。
   books.Update(tmp, index);
   return tmp.Price() * quantity;
