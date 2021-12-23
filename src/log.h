@@ -40,6 +40,8 @@ class LogManager {
   void ShowFinance(const string &str = "");
   void ReportFinance();
   void AddLog(const Log &);
+  void ReportEmployee(const string &id = "");
+  void ReportLog();
 };
 
 #endif  // BOOKSTORE_LOG_H_

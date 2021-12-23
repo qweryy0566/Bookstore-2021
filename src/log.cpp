@@ -95,3 +95,11 @@ void LogManager::AddLog(const Log &record) {
   records.ReadInfo(count);
   records.WriteInfo(count + 1);
 }
+
+void LogManager::ReportEmployee(const string &id) {
+
+}
+
+void LogManager::ReportLog() {
+  
+}
