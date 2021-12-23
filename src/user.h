@@ -41,7 +41,7 @@ class UserManager {
   };
   MemoryRiver<User> users;  // 开头存一个数表示用户数量（不含来宾）
   BlockList list;
-  vector<LoginUser> stack;  // TODO : 存在 bug, 密码可能被更改，不过不影响本题。
+  vector<LoginUser> stack;  // 登录栈。
   unordered_map<string, int> login_id;
 
   const LoginUser &CurrentUser() const;
